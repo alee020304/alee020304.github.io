@@ -1,7 +1,99 @@
-<!DOCTYPE html>
-<html>
-    <body>
-        <h1>Hello World</h1>
-        <p>I'm hosted with GitHub Pages.</p>
-    </body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Ahreum Lee — Computer Science & AI, software, ML, HCI, and research." />
+    <title>Ahreum Lee — Portfolio</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./">Ahreum Lee</a>
+      <nav>
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a href="#research">Research</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="eyebrow">Computer Science & AI · McGill University</p>
+        <h1>Building at the intersection of <span>AI, software, HCI & people.</span></h1>
+        <p class="intro">
+          Explore my work through the map below. Filter by the ideas, technologies,
+          and disciplines that connect my projects.
+        </p>
+      </section>
+
+      <section id="work" class="map-section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Explore</p>
+            <h2>Work map</h2>
+          </div>
+          <button id="shareView" class="button secondary">Share this view</button>
+        </div>
+
+        <div class="filters" id="filters" aria-label="Filter projects"></div>
+        <p id="viewLabel" class="view-label"></p>
+
+        <div class="map-shell">
+          <svg id="map" role="img" aria-label="Interactive map of Ahreum's work"></svg>
+          <div id="tooltip" class="tooltip" hidden></div>
+        </div>
+
+        <div class="legend">
+          <span><i class="dot project"></i> Project</span>
+          <span><i class="dot experience"></i> Experience</span>
+          <span><i class="dot community"></i> Community</span>
+        </div>
+      </section>
+
+      <section id="research" class="content-section">
+        <p class="eyebrow">Research</p>
+        <h2>Research & technical work</h2>
+        <div class="cards">
+          <article class="card">
+            <p class="tag">SURE · OpenQuake</p>
+            <h3>Large-scale seismic risk modeling</h3>
+            <p>Open-source development, geospatial data pipelines, and HPC workflows.</p>
+            <a href="./projects/openquake.html">Explore project →</a>
+          </article>
+          <article class="card">
+            <p class="tag">Shared Reality Lab</p>
+            <h3>AI Digital Nurse</h3>
+            <p>Multimodal conversational AI, retrieval, evaluation, and human-centered interaction.</p>
+            <a href="./projects/adina.html">Explore project →</a>
+          </article>
+        </div>
+      </section>
+
+      <section id="about" class="content-section about">
+        <p class="eyebrow">About</p>
+        <h2>A generalist who likes building.</h2>
+        <p>
+          I'm interested in problems where software, AI, data, and human experience
+          overlap. This site is an evolving record of what I've built, researched,
+          learned, and experimented with.
+        </p>
+      </section>
+
+      <section id="contact" class="content-section contact">
+        <p class="eyebrow">Contact</p>
+        <h2>Let's connect.</h2>
+        <div class="links">
+          <a href="mailto:ahreuml0304@gmail.com">Email</a>
+          <a href="https://www.linkedin.com/in/ahreum-lee-1190a7215/">LinkedIn</a>
+          <a href="https://github.com/alee020304">GitHub</a>
+          <a href="./resume.pdf">Resume</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>© 2026 Ahreum Lee</footer>
+    <script src="script.js"></script>
+  </body>
 </html>
