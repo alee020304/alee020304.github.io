@@ -1,30 +1,33 @@
 import { useEffect, useState } from "react";
 import WorkMap3D from "./WorkMap3D.jsx";
-import { TAG_ORDER, VIEWS } from "../data/work.js";
+import { CATEGORIES } from "../data/work.js";
 
-function readInitialTags() {
+function readInitialCategories() {
   const params = new URLSearchParams(location.search);
-  const view = params.get("view");
-  if (view && VIEWS[view]) return new Set(VIEWS[view]);
-  return new Set((params.get("tags") || "").split(",").filter(Boolean));
+  const ids = new Set(CATEGORIES.map((c) => c.id));
+  return new Set(
+    (params.get("categories") || "")
+      .split(",")
+      .filter((c) => ids.has(c))
+  );
 }
 
 export default function WorkSection({ onSelect }) {
-  const [activeTags, setActiveTags] = useState(() => readInitialTags());
+  const [activeCategories, setActiveCategories] = useState(() => readInitialCategories());
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const next = new URLSearchParams();
-    if (activeTags.size) next.set("tags", [...activeTags].join(","));
+    if (activeCategories.size) next.set("categories", [...activeCategories].join(","));
     const qs = next.toString();
     history.replaceState({}, "", `${location.pathname}${qs ? "?" + qs : ""}`);
-  }, [activeTags]);
+  }, [activeCategories]);
 
-  function toggleTag(tag) {
-    setActiveTags((prev) => {
+  function toggleCategory(id) {
+    setActiveCategories((prev) => {
       const next = new Set(prev);
-      if (next.has(tag)) next.delete(tag);
-      else next.add(tag);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
   }
@@ -49,26 +52,29 @@ export default function WorkSection({ onSelect }) {
           </button>
         </div>
         <p className="map-hint" style={{ marginTop: 0, marginBottom: 18 }}>
-          Drag to orbit, scroll to zoom, click a node for the full story.
+          Drag to orbit, scroll to zoom, click a satellite for the full story.
         </p>
         <div className="tag-filters">
-          {TAG_ORDER.map((tag) => (
+          {CATEGORIES.map((cat) => (
             <button
-              key={tag}
-              className={"tag-filter" + (activeTags.has(tag) ? " active" : "")}
-              onClick={() => toggleTag(tag)}
+              key={cat.id}
+              className={"tag-filter" + (activeCategories.has(cat.id) ? " active" : "")}
+              style={activeCategories.has(cat.id) ? { borderColor: cat.color, color: cat.color } : undefined}
+              onClick={() => toggleCategory(cat.id)}
             >
-              {tag}
+              {cat.label}
             </button>
           ))}
         </div>
         <div className="map-shell">
-          <WorkMap3D activeTags={activeTags} onSelect={onSelect} />
+          <WorkMap3D activeCategories={activeCategories} onSelect={onSelect} />
         </div>
         <p className="map-hint">
-          <span style={{ color: "var(--brass)" }}>●</span> experience{" "}
-          <span style={{ color: "var(--slate)", marginLeft: 14 }}>●</span> project{" "}
-          <span style={{ color: "var(--muted)", marginLeft: 14 }}>●</span> community
+          {CATEGORIES.map((cat) => (
+            <span key={cat.id} style={{ marginRight: 16 }}>
+              <span style={{ color: cat.color }}>●</span> {cat.label}
+            </span>
+          ))}
         </p>
       </div>
     </section>

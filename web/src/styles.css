@@ -222,6 +222,23 @@ button:focus-visible {
   opacity: 0.25;
 }
 
+.planet-label {
+  font: 600 0.9rem "IBM Plex Sans", sans-serif;
+  letter-spacing: 0.02em;
+  color: var(--paper);
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  padding: 5px 13px;
+  border-radius: 999px;
+  white-space: nowrap;
+  pointer-events: none;
+  border: 1px solid;
+  transform: translate(14px, -10px);
+}
+
+.planet-label.dim {
+  opacity: 0.3;
+}
+
 .map-hint {
   color: var(--muted);
   font-size: 0.85rem;
