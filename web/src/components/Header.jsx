@@ -6,9 +6,9 @@ export default function Header() {
           Ahreum Lee
         </a>
         <nav>
-          <a href="#work">Work</a>
-          <a href="#awards">Awards</a>
-          <a href="#about">About</a>
+          <a href="#forms">Forms</a>
+          <a href="#cases">Cases</a>
+          <a href="#range">Range</a>
           <a href="#contact">Contact</a>
         </nav>
       </div>

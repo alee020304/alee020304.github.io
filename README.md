@@ -1,7 +1,10 @@
 # Ahreum Lee — Portfolio
 
-A 3D, motion-driven portfolio: an interactive node graph of my work (React Three
-Fiber) with case-study drawers (Framer Motion), and shareable filter URLs.
+A portfolio made of paper. Four scroll frames show four projects, each in a different
+paper technique (folded crane, newsprint collage, cut-paper earth, an unfolded sheet).
+Two case studies follow, then a graph of everything I've tried, plotted by how
+technical and how creative it is. All textures and illustrations are SVG and CSS, so
+there are no image files except case-study photos.
 
 ## Develop
 
@@ -29,21 +32,11 @@ accumulating hashed bundles.
 
 ## Project structure
 
-- `web/src/data/work.js` — all experience/project/community facts, tags, and the
-  3D node positions and connections.
-- `web/src/components/Hero3D.jsx`, `WorkMap3D.jsx` — the two R3F scenes.
-- `web/src/components/Drawer.jsx` — the case-study/detail panel.
-- `web/public/images/...` — case-study screenshots (falls back to an "Image
-  coming soon" placeholder when a path doesn't resolve).
-
-## Shareable views
-
-Examples:
-
-- `/?view=software-engineering`
-- `/?view=machine-learning`
-- `/?view=hci`
-- `/?view=product`
-- `/?tags=AI,Research`
-
-Views and tag order live in `web/src/data/work.js`.
+- `web/src/data/work.js`: all text and facts: the four frames (`FORMS`), the case
+  studies (`CASES`), and the graph (`RANGE`, where each item has `x` = technical and
+  `y` = creative, from 0 to 10).
+- `web/src/components/Forms.jsx`: the pinned scroll sequence.
+- `web/src/components/art/`: the four paper illustrations.
+- `web/src/paper.jsx`: shared geometry (hand-cut circles, torn edges) and SVG grain filters.
+- `web/public/images/...`: case-study photos. A missing file shows a "Photograph to
+  come" plate.
