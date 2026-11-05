@@ -7,7 +7,7 @@ import { FORMS } from "../data/work.js";
 import Crane from "./art/Crane.jsx";
 import Collage from "./art/Collage.jsx";
 import EarthCut from "./art/EarthCut.jsx";
-import Unfolded from "./art/Unfolded.jsx";
+import Woven from "./art/Woven.jsx";
 
 const sheet = {
   initial: { opacity: 0, y: 28, rotate: 1.5 },
@@ -19,12 +19,12 @@ function Art({ id, lift }) {
   if (id === "folded") return <Crane />;
   if (id === "collage") return <Collage />;
   if (id === "cut") return <EarthCut lift={lift} />;
-  return <Unfolded />;
+  return <Woven />;
 }
 
 function FormLink({ form }) {
   if (form.caseId) return <a className="text-link" href={`#case-${form.caseId}`}>Read the case</a>;
-  if (form.rangeId) return <a className="text-link" href="#range">See where it sits</a>;
+  if (form.rangeId) return <a className="text-link" href="#range">See it on the graph</a>;
   return null;
 }
 
@@ -59,8 +59,8 @@ export default function Forms() {
                   <h1>One sheet, folded many ways.</h1>
                   <p className="lede">
                     Computer science and AI are my material. What I make from them changes with the problem:
-                    an evaluation for an AI nurse, a reading of two thousand news articles, seismic risk
-                    calculations that finish in thirty hours instead of four days. Much of the sheet is still unfolded.
+                    an evaluation for an AI nurse, a study of 2,100 news articles, seismic risk calculations cut
+                    from four days to thirty hours, and tools that a property company's staff use every day.
                   </p>
                   <p className="scroll-cue">Scroll through four forms</p>
                 </>

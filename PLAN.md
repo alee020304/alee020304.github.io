@@ -4,7 +4,7 @@ Supersedes v2 (3D terrain + planet work map). Branch: `paper`.
 
 ## Idea
 
-The same training takes different forms, and some forms aren't found yet. Each
+The same training takes different forms. Each
 project is shown in a different paper technique:
 
 | Frame | Technique | Project | Why this form |
@@ -12,11 +12,11 @@ project is shown in a different paper technique:
 | I | Folded: an origami crane in flight | ADiNA | The crane is a long-life symbol; the project is elder care |
 | II | Collage: torn newsprint on kraft | Complex Collaboration Lab | 2,100+ news articles, cut into topics |
 | III | Cut: layered paper earth, wedge removed | OpenQuake | Seismic risk; the "cut" is also 96 h → 30 h |
-| IV | Unfolded: a blank sheet with only creases | PATRY / what's next | Potential that isn't a shape yet |
+| IV | Woven: three colours of strip woven through cream | PATRY Group | One tool used by three teams |
 
 Then two full case studies (ADiNA, OpenQuake), each unfolding like a letter; then the
-range graph (technical × creative on graph paper, with an empty "next" corner);
-recognition; contact.
+range graph (technical × creative on graph paper; hover or tap a pin for a first-person
+line on what I did); recognition; contact.
 
 ## Design
 

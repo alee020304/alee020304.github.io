@@ -1,7 +1,7 @@
 # Ahreum Lee — Portfolio
 
 A portfolio made of paper. Four scroll frames show four projects, each in a different
-paper technique (folded crane, newsprint collage, cut-paper earth, an unfolded sheet).
+paper technique (folded crane, newsprint collage, cut-paper earth, paper weaving).
 Two case studies follow, then a graph of everything I've tried, plotted by how
 technical and how creative it is. All textures and illustrations are SVG and CSS, so
 there are no image files except case-study photos.

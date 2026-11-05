@@ -97,7 +97,7 @@ export default function Cases() {
     <section id="cases" className="section cases">
       <div className="wrap">
         <div className="section-head">
-          <h2>Two, unfolded in full.</h2>
+          <h2>Two, in depth.</h2>
           <p>How the question was set, what I built, and what I found.</p>
         </div>
         {CASES.map((c) => (

@@ -229,7 +229,7 @@ h3 {
   background: var(--grain), var(--indigo);
 }
 
-.board-unfolded .board-sheet {
+.board-woven .board-sheet {
   background: var(--grain), #e4dccd;
 }
 
@@ -461,28 +461,6 @@ h3 {
   0% { opacity: 0; transform: scale(0.6); }
   30% { opacity: 0.9; }
   100% { opacity: 0; transform: scale(1.3); }
-}
-
-/* IV. Unfolded */
-
-.crease {
-  stroke-width: 1.1;
-}
-
-.crease-mountain {
-  stroke: var(--vermilion);
-  opacity: 0.7;
-}
-
-.crease-valley {
-  stroke: var(--indigo);
-  opacity: 0.55;
-}
-
-.crease-kite {
-  stroke: var(--indigo);
-  stroke-width: 0.7;
-  opacity: 0.35;
 }
 
 /* Sections */
@@ -725,13 +703,6 @@ h3 {
 .kind-project, .pin-project { --pin: #a8824f; }
 .kind-community, .pin-community { --pin: var(--sage); }
 
-.range-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
-  gap: 40px;
-  align-items: start;
-}
-
 .graph-sheet {
   padding: 40px 40px 56px 64px;
   border-radius: 2px;
@@ -744,7 +715,7 @@ h3 {
 /* Graph paper: ten major squares each way, so lines meet the axes exactly. */
 .graph-plot {
   position: relative;
-  aspect-ratio: 1.5;
+  aspect-ratio: 1.6;
   border-left: 1.5px solid var(--ink);
   border-bottom: 1.5px solid var(--ink);
   background:
@@ -773,22 +744,6 @@ h3 {
   top: 0;
   transform: rotate(-90deg) translateX(-100%);
   transform-origin: top left;
-}
-
-.next-zone {
-  position: absolute;
-  right: 1.5%;
-  top: 2%;
-  width: 17%;
-  height: 19%;
-  border: 1.5px dashed var(--vermilion);
-  transform: rotate(2deg);
-  display: grid;
-  place-items: center;
-  font-family: var(--serif-display);
-  font-style: italic;
-  font-size: 1.25rem;
-  color: var(--vermilion);
 }
 
 .pin {
@@ -843,32 +798,45 @@ h3 {
   color: var(--paper);
 }
 
-.range-note {
-  position: sticky;
-  top: calc(var(--header) + 32px);
-  padding: 28px;
-  background: var(--grain), var(--cotton);
-  box-shadow: 0 2px 4px rgba(40, 28, 16, 0.06), 0 20px 40px -28px rgba(40, 28, 16, 0.5);
+.label-short {
+  display: none;
 }
 
+.pin-card {
+  position: absolute;
+  z-index: 5;
+  width: 300px;
+  padding: 20px 22px;
+  background: var(--grain), var(--cotton);
+  box-shadow: 0 2px 4px rgba(40, 28, 16, 0.08), 0 22px 44px -22px rgba(40, 28, 16, 0.55);
+}
+
+.pin-card h3,
 .range-note h3 {
-  font-size: 2rem;
+  font-size: 1.6rem;
   line-height: 1.05;
 }
 
+.pin-card .kicker,
 .range-note .kicker {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .range-meta {
   font-family: var(--sans);
-  font-size: 0.84rem;
+  font-size: 0.8rem;
   color: var(--muted);
-  margin: 6px 0 14px;
+  margin: 6px 0 10px;
 }
 
-.range-note p {
-  margin-top: 0;
+.range-body {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0 0 12px;
+}
+
+.range-note {
+  display: none;
 }
 
 /* Recognition */
@@ -1047,10 +1015,6 @@ footer {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .range-layout {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   .graph-sheet {
     padding: 20px 16px 44px 40px;
   }
@@ -1077,8 +1041,28 @@ footer {
     height: 11px;
   }
 
+  .label-long,
+  .pin-card {
+    display: none;
+  }
+
+  .label-short {
+    display: inline;
+  }
+
   .range-note {
-    position: static;
+    display: block;
+    margin-top: 20px;
+    padding: 22px;
+    min-height: 120px;
+    background: var(--grain), var(--cotton);
+    box-shadow: 0 2px 4px rgba(40, 28, 16, 0.06), 0 20px 40px -28px rgba(40, 28, 16, 0.5);
+  }
+
+  .range-hint {
+    margin: 0;
+    font-style: italic;
+    color: var(--muted);
   }
 
   .ledger-row {

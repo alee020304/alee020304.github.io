@@ -35,14 +35,14 @@ export const FORMS = [
     caption: "OpenQuake · SURE, McGill · 2026"
   },
   {
-    id: "unfolded",
+    id: "woven",
     numeral: "IV",
-    technique: "Unfolded",
-    rangeId: "next",
-    title: "The creases are there. The shape is not, yet.",
+    technique: "Woven",
+    rangeId: "patry",
+    title: "One tool, woven through three teams.",
     body:
-      "Now I'm an AI Analyst at PATRY Group in Kingston, building tools that property operations staff use every day. What comes next is open: product, AI engineering, or somewhere between the two.",
-    caption: "PATRY Group · AI Analyst Intern · 2026"
+      "At PATRY Group I built a Property Inbox and Landlord and Tenant Board tracker on the company's Yardi data. Accounts receivable, property management and paralegal staff all work in it. Now I'm building a maintenance bot for tenants across every property.",
+    caption: "PATRY Group · AI Analyst Intern · 2026 · React, Azure, Vercel"
   }
 ];
 
@@ -140,137 +140,155 @@ export const KINDS = [
 export const RANGE = [
   {
     id: "openquake",
-    label: "OpenQuake",
+    label: "OpenQuake: 96 h → 30 h",
+    short: "OpenQuake",
     kind: "research",
     x: 9.2,
     y: 2.6,
-    meta: "SURE Research Intern · 2026",
-    body: "Cut seismic risk runtime from about 96 to 30 hours on HPC; extended the OpenQuake engine in Python.",
+    meta: "SURE Research Intern, McGill · 2026",
+    body:
+      "I cut large seismic risk calculations from about 96 hours to 30 on a computing cluster, and extended the open-source OpenQuake engine in Python. The poster won Best SURE Poster.",
     caseId: "openquake"
   },
   {
     id: "reconstruct",
-    label: "Reconstruct",
+    label: "Reconstruct: retrofit assessment tool",
+    short: "Reconstruct",
     kind: "work",
     x: 7.7,
-    y: 4.1,
+    y: 3.9,
     meta: "Web Developer, NSERC USRA · 2025–26",
     body:
-      "Built a multi-criteria assessment tool for free building-retrofit assessments that the team kept extending, and a retrofit cost calculator (React, Django REST, AWS)."
+      "I built a multi-criteria tool for free building-retrofit assessments that the team kept extending, and a retrofit cost calculator (React, Django REST, AWS)."
   },
   {
     id: "patry",
-    label: "PATRY Group",
+    label: "PATRY: AI tools used by 3 teams",
+    short: "PATRY Group",
     kind: "work",
     x: 7.9,
     y: 5.7,
-    meta: "AI Analyst Intern · 2026",
+    meta: "AI Analyst Intern, PATRY Group · 2026",
     body:
-      "A Property Inbox and Landlord and Tenant Board tracker on Yardi data, used by accounts receivable, property management and paralegal staff. Now building a tenant maintenance bot. React on Vercel, PostgreSQL and auth on Azure."
+      "I built a Property Inbox and Landlord and Tenant Board tracker that accounts receivable, property management and paralegal staff use. Now I'm building a tenant maintenance bot. React on Vercel, PostgreSQL and auth on Azure."
   },
   {
     id: "adina",
-    label: "ADiNA",
+    label: "ADiNA: evaluating an AI nurse",
+    short: "ADiNA",
     kind: "research",
     x: 6.7,
     y: 7.5,
-    meta: "Research Assistant · 2025–26",
-    body: "An LLM-as-a-judge evaluation for a voice agent in elder care, and three care-home visits that reshaped its memory.",
+    meta: "Research Assistant, Shared Reality Lab · 2025–26",
+    body:
+      "I built an LLM-as-a-judge evaluation for an AI nurse for seniors, then visited a care home three times. What residents told me changed how its memory was designed.",
     caseId: "adina"
   },
   {
     id: "dna",
-    label: "DNA data storage",
+    label: "DNA data storage (COMP 561)",
+    short: "DNA storage",
     kind: "project",
     x: 8.4,
     y: 6.9,
-    meta: "COMP 561, Computational Biology",
-    body: "Encoded digital data as nucleotide sequences and measured the error rates of encoding and decoding."
+    meta: "Computational Biology course project",
+    body: "I encoded digital data as DNA sequences and measured the error rates of encoding and decoding."
   },
   {
     id: "complex-collaboration",
-    label: "Complex Collaboration",
+    label: "Healthcare reform: 2,100+ articles",
+    short: "Reform study",
     kind: "research",
     x: 6.0,
     y: 4.6,
-    meta: "Research Fellow · 2025–26",
+    meta: "Research Fellow, Complex Collaboration Lab · 2025–26",
     body:
-      "Scraped 2,100+ healthcare reform articles, modelled their topics with BERTopic, and checked the trends against history. The regional differences became the structure of the lab's next study."
+      "I scraped 2,100+ news articles, found their topics with BERTopic, and checked the trends against history for a supervisor sceptical of AI. The results became the structure of the lab's next study."
   },
   {
     id: "sentiment",
-    label: "Headline sentiment",
+    label: "Headline sentiment: 5 models",
+    short: "Sentiment",
     kind: "project",
     x: 6.2,
     y: 1.5,
-    meta: "COMP 550, Natural Language Processing",
-    body: "Compared Naive Bayes, SVM, random forest, MLP and BERT on news headline sentiment. BERT did best."
+    meta: "Natural Language Processing course project",
+    body: "I compared Naive Bayes, SVM, random forest, MLP and BERT on news headline sentiment. BERT did best."
   },
   {
     id: "building",
-    label: "Building Generator",
+    label: "Address → building energy",
+    short: "Building tool",
     kind: "project",
     x: 5.2,
     y: 6.3,
     meta: "Side project · 2025",
-    body: "Type an address; get building dimensions and energy estimates (U-value, heat loss) from Google Maps and OpenStreetMap data.",
+    body:
+      "I built a tool that turns an address into building dimensions and energy estimates (U-value, heat loss) from Google Maps and OpenStreetMap data.",
     href: "https://github.com/alee020304/vibe-coding"
   },
   {
     id: "edblock",
-    label: "ED Block",
+    label: "ED Block: YouTube filter",
+    short: "ED Block",
     kind: "project",
-    x: 4.7,
-    y: 3.5,
+    x: 4.5,
+    y: 3.2,
     meta: "Chrome extension · 2023",
-    body: "Filtered YouTube content by classifying transcripts in real time (Naive Bayes, Flask).",
+    body: "I built a Chrome extension that filters YouTube by classifying video transcripts in real time (Naive Bayes, Flask).",
     href: "https://github.com/TaewonHwang02/Akcse_project2024"
   },
   {
     id: "nauly",
-    label: "Nauly",
+    label: "Nauly: PM at McHacks 2026",
+    short: "Nauly",
     kind: "project",
     x: 3.6,
     y: 7.7,
     meta: "Product Manager · McHacks 2026",
     body:
-      "Hands-free navigation that gives directions by landmarks, the way people do. I defined who it was for, cut the scope to 24 hours for a team of four, and pitched it."
+      "As PM for a team of four, I defined the users, cut the scope to fit 24 hours and pitched hands-free navigation that gives directions by landmarks."
   },
   {
     id: "techwin",
-    label: "Techwin",
+    label: "Techwin: BIM coordination",
+    short: "Techwin",
     kind: "work",
     x: 2.8,
     y: 2.1,
-    meta: "Project Coordinator · 2024",
-    body: "Tracked 3D BIM model clashes across engineering firms on a battery plant project. My coordination notes were reused by the team."
+    meta: "Project Coordinator, Techwin Plant Canada · 2024",
+    body: "I tracked 3D model clashes between engineering firms on a battery plant project. The team reused my coordination notes."
   },
   {
     id: "akcse",
-    label: "AKCSE",
+    label: "AKCSE Co-President",
+    short: "AKCSE",
     kind: "community",
     x: 1.6,
     y: 4.7,
-    meta: "Co-President · 2024–25",
-    body: "Led a multidisciplinary executive team at the Association of Korean-Canadian Scientists & Engineers and secured $2,000 in additional funding."
+    meta: "Association of Korean-Canadian Scientists & Engineers · 2024–25",
+    body: "I co-led a multidisciplinary executive team and secured $2,000 in additional funding."
   },
   {
     id: "gdg",
-    label: "GDG McGill",
+    label: "GDG: 100K+ impressions",
+    short: "GDG",
     kind: "community",
     x: 2.1,
     y: 6.9,
-    meta: "VP Marketing · 2025–",
-    body: "Ran campaigns for a student developer community: 100K+ impressions in two months."
+    meta: "VP Marketing, GDG on Campus McGill · 2025–",
+    body: "I ran campaigns for McGill's student developer community: 100K+ impressions in two months."
   },
   {
     id: "chi",
-    label: "CHI T-shirt",
+    label: "CHI 2025 in Yokohama",
+    short: "CHI 2025",
     kind: "community",
     x: 1.1,
     y: 9.0,
-    meta: "ACM CHI 2025",
-    body: "Won the student volunteer T-shirt design competition, and volunteered at the conference."
+    meta: "ACM CHI 2025 · Student Volunteer",
+    body:
+      "I found my own way to a global conference: I won the student volunteer T-shirt design competition and volunteered at CHI."
   }
 ];
 
