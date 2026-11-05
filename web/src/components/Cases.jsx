@@ -5,15 +5,20 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { CASES } from "../data/work.js";
 
+// Locally, a missing photo shows a "Photograph to come" plate. In the
+// published build, a plate stays hidden until its photo has loaded.
+const SHOW_PLACEHOLDERS = import.meta.env.DEV;
+
 function Plate({ plate, n }) {
-  const [missing, setMissing] = useState(false);
+  const [status, setStatus] = useState("loading");
+  const hidden = !SHOW_PLACEHOLDERS && status !== "ok";
   return (
-    <figure className="plate">
+    <figure className="plate" hidden={hidden}>
       <div className="plate-mount">
-        {missing ? (
+        {status === "missing" ? (
           <div className="plate-empty">Photograph to come</div>
         ) : (
-          <img src={plate.src} alt={plate.caption} loading="lazy" onError={() => setMissing(true)} />
+          <img src={plate.src} alt={plate.caption} onLoad={() => setStatus("ok")} onError={() => setStatus("missing")} />
         )}
         <span className="corner tl" />
         <span className="corner tr" />
@@ -29,10 +34,10 @@ function Plate({ plate, n }) {
 
 function Case({ c }) {
   return (
-    <article id={`case-${c.id}`} className="case">
+    <article id={`case-${c.id}`} className={c.size === "spotlight" ? "case spotlight" : "case"}>
       <header className="case-head">
         <p className="kicker">
-          <span className="numeral">{c.numeral}</span> Case
+          <span className="numeral">{c.numeral}</span> {c.size === "spotlight" ? "Spotlight" : "Case"}
         </p>
         <h3>{c.name}</h3>
         <p className="case-subtitle">{c.subtitle}</p>
@@ -81,6 +86,14 @@ function Case({ c }) {
               <span className="to">{c.figure.to}</span>
             </p>
           )}
+          {c.reflection && (
+            <aside className="reflection">
+              <h4>What it meant for me</h4>
+              <p className="reflection-lead">{c.reflection.lead}</p>
+              {c.reflection.credit && <p className="reflection-credit">{c.reflection.credit}</p>}
+              <p>{c.reflection.body}</p>
+            </aside>
+          )}
           <div className="plates">
             {c.plates.map((p, i) => (
               <Plate key={p.src} plate={p} n={i + 1} />
@@ -97,8 +110,8 @@ export default function Cases() {
     <section id="cases" className="section cases">
       <div className="wrap">
         <div className="section-head">
-          <h2>Two, in depth.</h2>
-          <p>How the question was set, what I built, and what I found.</p>
+          <h2>In depth.</h2>
+          <p>One full case and one spotlight: what I built, what I found, and what it meant for me.</p>
         </div>
         {CASES.map((c) => (
           <Case key={c.id} c={c} />

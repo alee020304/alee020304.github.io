@@ -1,12 +1,12 @@
 // Facts come from ../../reum (resume/bullet-bank.md, candidate-profile.md).
 // Anything still marked TODO there (metrics, links, unconfirmed names) is left out.
 
-// The opening sequence: one project per paper technique.
+// The opening pop-up book: one project per spread.
 export const FORMS = [
   {
     id: "folded",
     numeral: "I",
-    technique: "Folded",
+    technique: "The crane",
     caseId: "adina",
     title: "An AI nurse, tested before it met anyone.",
     body:
@@ -17,7 +17,7 @@ export const FORMS = [
   {
     id: "collage",
     numeral: "II",
-    technique: "Collage",
+    technique: "The newsstand",
     rangeId: "complex-collaboration",
     title: "Two thousand articles, cut into patterns.",
     body:
@@ -27,19 +27,19 @@ export const FORMS = [
   {
     id: "cut",
     numeral: "III",
-    technique: "Cut",
+    technique: "The earth",
     caseId: "openquake",
-    title: "Four days, cut to thirty hours.",
+    title: "Inside a researcher's problem.",
     body:
-      "I extended OpenQuake, an open-source seismic risk engine, and moved its largest calculations onto a computing cluster. A run that took about ninety-six hours now finishes in thirty.",
+      "I extended OpenQuake, an open-source seismic risk engine, in Python, and set up the project's move from engineering-department computers to a government high-performance computing cluster, where large runs take about thirty hours instead of four days.",
     caption: "OpenQuake · SURE, McGill · 2026"
   },
   {
     id: "woven",
     numeral: "IV",
-    technique: "Woven",
+    technique: "The building",
     rangeId: "patry",
-    title: "One tool, woven through three teams.",
+    title: "One inbox for three teams.",
     body:
       "At PATRY Group I built a Property Inbox and Landlord and Tenant Board tracker on the company's Yardi data. Accounts receivable, property management and paralegal staff all work in it. Now I'm building a maintenance bot for tenants across every property.",
     caption: "PATRY Group · AI Analyst Intern · 2026 · React, Azure, Vercel"
@@ -82,6 +82,12 @@ export const CASES = [
       }
     ],
     quote: "The agent didn't need to be taught empathy. It needed to know when to use it.",
+    reflection: {
+      lead: "Pills, not vitamins.",
+      credit: "A line I took from Ivan Zhao.",
+      body:
+        "Most of the development effort went into adding features, cutting latency and supporting more languages. What helped me was narrowing to the one thing the agent had to do well, the conversation itself, and scoping from there what would help."
+    },
     plates: [
       { src: "/images/adina/overview.jpg", caption: "System overview" },
       { src: "/images/adina/detail.jpg", caption: "Evaluation detail" }
@@ -90,6 +96,7 @@ export const CASES = [
   {
     id: "openquake",
     numeral: "II",
+    size: "spotlight",
     name: "OpenQuake",
     subtitle: "Seismic risk calculations at scale",
     meta: [
@@ -100,31 +107,18 @@ export const CASES = [
     ],
     sections: [
       {
-        heading: "The question",
+        heading: "The work",
         body:
-          "Classical seismic risk calculations over a large region took about four days to run, and the engine lacked parts of the workflow the research needed."
-      },
-      {
-        heading: "What I built",
-        body:
-          "Python functionality in the open-source OpenQuake engine for classical seismic risk calculations, with damage-exceedance outputs fed into the existing workflow. Reproducible pipelines for the inputs: building records, population data and Vs30 rasters."
-      },
-      {
-        heading: "What I found",
-        body:
-          "Configured for a SLURM computing cluster, a representative calculation went from about ninety-six hours to thirty."
-      },
-      {
-        heading: "Recognition",
-        body: "The poster won the Best SURE Poster Award (General Category), 2026."
+          "I extended the open-source OpenQuake engine in Python for classical seismic risk calculations and built reproducible pipelines for building, population and Vs30 data. I also set up the move from engineering-department computers to a government HPC cluster (SLURM), where a representative calculation runs in about 30 hours instead of 96. The poster won the Best SURE Poster Award (General Category)."
       }
     ],
-    figure: { from: "96 h", to: "30 h" },
+    reflection: {
+      lead: "Inside a researcher's head.",
+      body:
+        "In earlier labs I assisted with work I already knew. Here I worked closely with my supervisors, analysing the outputs together and brainstorming solutions. It was a chance to see how a researcher thinks through a problem."
+    },
     links: [{ label: "Code on GitHub", href: "https://github.com/alee020304/oq-engine" }],
-    plates: [
-      { src: "/images/openquake/data-map.jpg", caption: "Hazard or exposure map" },
-      { src: "/images/openquake/poster.jpg", caption: "The SURE poster" }
-    ]
+    plates: [{ src: "/images/openquake/poster.jpg", caption: "The SURE poster" }]
   }
 ];
 
@@ -140,14 +134,14 @@ export const KINDS = [
 export const RANGE = [
   {
     id: "openquake",
-    label: "OpenQuake: 96 h → 30 h",
+    label: "OpenQuake: seismic risk engine",
     short: "OpenQuake",
     kind: "research",
     x: 9.2,
     y: 2.6,
     meta: "SURE Research Intern, McGill · 2026",
     body:
-      "I cut large seismic risk calculations from about 96 hours to 30 on a computing cluster, and extended the open-source OpenQuake engine in Python. The poster won Best SURE Poster.",
+      "I extended the open-source OpenQuake engine in Python, and set up our move from engineering computers to a government HPC cluster, where runs take about 30 hours instead of 96. The poster won Best SURE Poster.",
     caseId: "openquake"
   },
   {

@@ -6,7 +6,7 @@ export default function Header() {
           Ahreum Lee
         </a>
         <nav>
-          <a href="#forms">Forms</a>
+          <a href="#forms">Work</a>
           <a href="#cases">Cases</a>
           <a href="#range">Range</a>
           <a href="#contact">Contact</a>

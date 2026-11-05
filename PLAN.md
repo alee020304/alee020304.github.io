@@ -11,7 +11,7 @@ project is shown in a different paper technique:
 | --- | --- | --- | --- |
 | I | Folded: an origami crane in flight | ADiNA | The crane is a long-life symbol; the project is elder care |
 | II | Collage: torn newsprint on kraft | Complex Collaboration Lab | 2,100+ news articles, cut into topics |
-| III | Cut: layered paper earth, wedge removed | OpenQuake | Seismic risk; the "cut" is also 96 h → 30 h |
+| III | The earth split open | OpenQuake | Seismic risk |
 | IV | Woven: three colours of strip woven through cream | PATRY Group | One tool used by three teams |
 
 Then two full case studies (ADiNA, OpenQuake), each unfolding like a letter; then the

@@ -200,37 +200,155 @@ h3 {
 
 .board {
   margin: 0;
-  justify-self: center;
-  width: min(100%, calc((100svh - var(--header) - 150px) * 1.2));
+  align-self: stretch;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.board-sheet {
-  aspect-ratio: 6 / 5;
-  border-radius: 2px;
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.6) inset,
-    0 2px 3px rgba(40, 28, 16, 0.08),
-    0 26px 50px -28px rgba(40, 28, 16, 0.55);
+/* The pop-up book. Built at a fixed size and scaled to fit (see Book.jsx). */
+
+.book-fit {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Centred absolutely, so the unscaled size never pushes the layout around. */
+.book-scene {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 560px;
+  height: 600px;
+  margin: -300px 0 0 -280px;
+  perspective: 1500px;
+  perspective-origin: 50% 10%;
+  transform-origin: center;
+}
+
+.book,
+.book * {
+  transform-style: preserve-3d;
+}
+
+.book {
+  position: relative;
+  margin: 0 auto;
+  transform-origin: 50% 100%;
+}
+
+.leaf {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 100%;
+}
+
+.leaf-front,
+.leaf-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  overflow: hidden;
+}
+
+.leaf-front {
+  box-shadow: inset 0 -30px 40px -30px rgba(40, 28, 16, 0.25);
+}
+
+.leaf-back {
+  transform: rotateX(180deg);
+  background: var(--grain), var(--cotton);
   display: grid;
   place-items: center;
-  overflow: hidden;
-  transition: background-color 0.5s ease;
 }
 
-.board-folded .board-sheet {
-  background: var(--fibres) 0 0 / 1200px 1200px, var(--grain), #dde3df;
+.leaf-folded .leaf-front { background: var(--fibres) 0 0 / 1200px 1200px, var(--grain), #dde3df; }
+.leaf-collage .leaf-front { background: var(--specks), var(--grain), var(--kraft); }
+.leaf-cut .leaf-front { background: var(--grain), var(--indigo); }
+.leaf-woven .leaf-front { background: var(--grain), #dfe5e6; }
+
+.leaf-numeral {
+  font-family: var(--serif-display);
+  font-style: italic;
+  font-size: 96px;
+  color: var(--rule);
 }
 
-.board-collage .board-sheet {
-  background: var(--specks), var(--grain), var(--kraft);
-}
-
-.board-cut .board-sheet {
+/* The cover: indigo cloth, cream lettering, a vermilion ribbon. */
+.leaf-folded .leaf-back {
   background: var(--grain), var(--indigo);
 }
 
-.board-woven .board-sheet {
-  background: var(--grain), #e4dccd;
+.cover {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  color: var(--cotton);
+}
+
+.ribbon {
+  position: absolute;
+  top: 0;
+  left: 56px;
+  width: 18px;
+  height: 120px;
+  background: var(--vermilion);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 86%, 0 100%);
+}
+
+.cover-name {
+  font-family: var(--serif-display);
+  font-size: 64px;
+  line-height: 1;
+}
+
+.cover-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 20px;
+  opacity: 0.8;
+}
+
+.pop-layer {
+  position: absolute;
+  transform-origin: 50% 100%;
+  backface-visibility: hidden;
+}
+
+.floor {
+  position: absolute;
+  left: 0;
+  transform-origin: 50% 0;
+  transform: rotateX(90deg);
+}
+
+.floor-page {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(40, 28, 16, 0.18), transparent 40px),
+    var(--grain),
+    var(--cotton);
+}
+
+/* Loose sheets under the book: the stack of papers. */
+.sheet {
+  position: absolute;
+  inset: -14px -10px;
+  background: var(--grain), #efe9dd;
+  box-shadow: 0 0 0 1px rgba(60, 45, 30, 0.08);
+}
+
+.loose-1 { transform: translateZ(-4px) rotateZ(-2.5deg); }
+.loose-2 { transform: translateZ(-8px) rotateZ(3deg) translateX(18px); background: var(--grain), #e6dccb; }
+.loose-3 { transform: translateZ(-12px) rotateZ(-5deg) translate(-22px, 10px); background: var(--grain), #ddd3c1; }
+
+.stack-edge {
+  position: absolute;
+  left: 0;
+  height: 12px;
+  background: repeating-linear-gradient(to bottom, #f3eee4 0 2px, #cfc5b4 2px 3px);
 }
 
 .art {
@@ -606,6 +724,55 @@ h3 {
   color: var(--vermilion);
 }
 
+.reflection {
+  margin: 44px 0 0;
+  padding: 26px 28px;
+  border-left: 2px solid var(--vermilion);
+  background: var(--grain), var(--paper-deep);
+  max-width: 40rem;
+}
+
+.case-body .reflection h4 {
+  color: var(--vermilion);
+}
+
+.case-body .reflection-lead {
+  font-family: var(--serif-display);
+  font-size: clamp(1.7rem, 2.8vw, 2.2rem);
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.case-body .reflection-credit {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+
+.case-body .reflection-lead + p:not(.reflection-credit) {
+  margin-top: 10px;
+}
+
+/* A spotlight is a smaller case: one sheet, one plate. */
+.spotlight .case-head h3 {
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+}
+
+.spotlight .case-sheet {
+  max-width: 60rem;
+  padding: 44px;
+}
+
+.spotlight .case-figure {
+  font-size: clamp(2.4rem, 5vw, 3.8rem) !important;
+  margin: 28px 0 !important;
+}
+
+.spotlight .plates {
+  grid-template-columns: minmax(0, 22rem);
+}
+
 .plates {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -615,6 +782,10 @@ h3 {
 
 .plate {
   margin: 0;
+}
+
+.plates:not(:has(.plate:not([hidden]))) {
+  display: none;
 }
 
 .plate-mount {
@@ -969,8 +1140,7 @@ footer {
   }
 
   .board {
-    width: min(100%, calc(38svh * 1.2));
-    align-self: center;
+    height: 40svh;
   }
 
   .board figcaption {
