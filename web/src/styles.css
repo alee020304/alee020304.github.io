@@ -142,7 +142,7 @@ h3 {
   color: var(--vermilion);
 }
 
-/* Forms: the pinned opening sequence */
+/* The opening: a pile of papers, then one sheet per section */
 
 .forms {
   position: relative;
@@ -152,25 +152,102 @@ h3 {
   position: sticky;
   top: 0;
   height: 100svh;
-  padding-top: calc(var(--header) + 24px);
-  padding-bottom: 20px;
+  overflow: hidden;
+}
+
+.pile {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.pile-sheet {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  filter: drop-shadow(0 8px 12px rgba(40, 28, 16, 0.2));
+  will-change: transform;
+}
+
+.deco {
+  box-shadow: 0 0 0 1px rgba(60, 45, 30, 0.06);
+}
+
+.deco-washi { background: var(--fibres) 0 0 / 1200px 1200px, var(--grain), #dde3df; }
+.deco-kraft { background: var(--specks), var(--grain), var(--kraft); }
+.deco-cotton { background: var(--grain), var(--cotton); }
+
+.deco-graph {
+  background:
+    linear-gradient(rgba(60, 100, 130, 0.2) 1px, transparent 1px) 0 0 / 100% 10%,
+    linear-gradient(90deg, rgba(60, 100, 130, 0.2) 1px, transparent 1px) 0 0 / 10% 100%,
+    var(--grain),
+    #f5f3ea;
+}
+
+.deco-news {
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 12px, rgba(40, 36, 30, 0.16) 12px 15px) 10% 14% / 80% 76% no-repeat,
+    var(--grain),
+    #ebe7dc;
+}
+
+.sheet-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.sheet-stack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* The earth illustration, lined up over the circle cut from the sheet. */
+.sheet-earth {
+  position: absolute;
+  left: 4.03%;
+  top: 2.87%;
+  width: 91.95%;
+  height: 91.95%;
+}
+
+.hero-place {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  grid-template-rows: minmax(0, 1fr) auto;
-  column-gap: 64px;
-  align-items: center;
+  place-items: center;
+  pointer-events: none;
 }
 
-.forms-text h1 {
-  font-size: clamp(3rem, 5.6vw, 5.4rem);
-  line-height: 0.98;
-  margin-bottom: 28px;
+.hero-sheet {
+  pointer-events: auto;
+  width: min(620px, calc(100vw - 40px));
+  padding: 52px 56px 44px;
+  background: var(--grain), var(--cotton);
+  box-shadow:
+    0 2px 4px rgba(40, 28, 16, 0.08),
+    0 30px 60px -30px rgba(40, 28, 16, 0.55);
 }
 
-.forms-text h2 {
-  font-size: clamp(2.2rem, 3.8vw, 3.6rem);
-  line-height: 1.02;
-  margin-bottom: 24px;
+.hero-sheet h1 {
+  font-size: clamp(3.2rem, 7vw, 5.6rem);
+  line-height: 0.95;
+  margin-bottom: 14px;
+}
+
+.hero-role {
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0 0 22px;
+}
+
+.hero-sheet .lede {
+  margin-bottom: 26px;
 }
 
 .lede {
@@ -198,189 +275,65 @@ h3 {
   margin-right: 12px;
 }
 
-.board {
-  margin: 0;
-  align-self: stretch;
-  min-height: 0;
+.skill-wrap {
+  position: absolute;
+  inset: var(--header) 0 0;
+  z-index: 3;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
 }
 
-/* The pop-up book. Built at a fixed size and scaled to fit (see Book.jsx). */
+.skill-text {
+  pointer-events: auto;
+  max-width: min(30rem, 42vw);
+}
 
-.book-fit {
+.skill-text h2 {
+  font-size: clamp(2rem, 3.4vw, 3.1rem);
+  line-height: 1.04;
+  margin-bottom: 24px;
+}
+
+.skill-points {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+}
+
+.skill-points li {
   position: relative;
-  flex: 1;
-  min-height: 0;
-}
-
-/* Centred absolutely, so the unscaled size never pushes the layout around. */
-.book-scene {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 560px;
-  height: 600px;
-  margin: -300px 0 0 -280px;
-  perspective: 1500px;
-  perspective-origin: 50% 10%;
-  transform-origin: center;
-}
-
-.book,
-.book * {
-  transform-style: preserve-3d;
-}
-
-.book {
-  position: relative;
-  margin: 0 auto;
-  transform-origin: 50% 100%;
-}
-
-.leaf {
-  position: absolute;
-  inset: 0;
-  transform-origin: 50% 100%;
-}
-
-.leaf-front,
-.leaf-back {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  overflow: hidden;
-}
-
-.leaf-front {
-  box-shadow: inset 0 -30px 40px -30px rgba(40, 28, 16, 0.25);
-}
-
-.leaf-back {
-  transform: rotateX(180deg);
-  background: var(--grain), var(--cotton);
-  display: grid;
-  place-items: center;
-}
-
-.leaf-folded .leaf-front { background: var(--fibres) 0 0 / 1200px 1200px, var(--grain), #dde3df; }
-.leaf-collage .leaf-front { background: var(--specks), var(--grain), var(--kraft); }
-.leaf-cut .leaf-front { background: var(--grain), var(--indigo); }
-.leaf-woven .leaf-front { background: var(--grain), #dfe5e6; }
-
-.leaf-numeral {
-  font-family: var(--serif-display);
-  font-style: italic;
-  font-size: 96px;
-  color: var(--rule);
-}
-
-/* The cover: indigo cloth, cream lettering, a vermilion ribbon. */
-.leaf-folded .leaf-back {
-  background: var(--grain), var(--indigo);
-}
-
-.cover {
-  display: grid;
-  justify-items: center;
-  gap: 6px;
-  color: var(--cotton);
-}
-
-.ribbon {
-  position: absolute;
-  top: 0;
-  left: 56px;
-  width: 18px;
-  height: 120px;
-  background: var(--vermilion);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 86%, 0 100%);
-}
-
-.cover-name {
-  font-family: var(--serif-display);
-  font-size: 64px;
-  line-height: 1;
-}
-
-.cover-sub {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 20px;
-  opacity: 0.8;
-}
-
-.pop-layer {
-  position: absolute;
-  transform-origin: 50% 100%;
-  backface-visibility: hidden;
-}
-
-.floor {
-  position: absolute;
-  left: 0;
-  transform-origin: 50% 0;
-  transform: rotateX(90deg);
-}
-
-.floor-page {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to bottom, rgba(40, 28, 16, 0.18), transparent 40px),
-    var(--grain),
-    var(--cotton);
-}
-
-/* Loose sheets under the book: the stack of papers. */
-.sheet {
-  position: absolute;
-  inset: -14px -10px;
-  background: var(--grain), #efe9dd;
-  box-shadow: 0 0 0 1px rgba(60, 45, 30, 0.08);
-}
-
-.loose-1 { transform: translateZ(-4px) rotateZ(-2.5deg); }
-.loose-2 { transform: translateZ(-8px) rotateZ(3deg) translateX(18px); background: var(--grain), #e6dccb; }
-.loose-3 { transform: translateZ(-12px) rotateZ(-5deg) translate(-22px, 10px); background: var(--grain), #ddd3c1; }
-
-.stack-edge {
-  position: absolute;
-  left: 0;
-  height: 12px;
-  background: repeating-linear-gradient(to bottom, #f3eee4 0 2px, #cfc5b4 2px 3px);
-}
-
-.art {
-  width: 100%;
-  height: 100%;
-}
-
-.board figcaption {
-  font-family: var(--sans);
-  font-size: 0.86rem;
-  color: var(--muted);
-  margin-top: 14px;
+  padding-left: 20px;
+  margin-bottom: 10px;
+  font-size: 1.04rem;
   line-height: 1.5;
+  color: var(--ink-soft);
 }
 
-.caption-technique {
-  color: var(--ink);
-  font-weight: 500;
-}
-
-.caption-note {
-  display: block;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 0.95rem;
+.skill-points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.75em;
+  width: 9px;
+  height: 1px;
+  background: var(--vermilion);
 }
 
 .swatches {
-  grid-column: 1 / -1;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18px;
+  z-index: 4;
   display: flex;
   gap: 10px;
-  flex-wrap: wrap;
+  transition: opacity 0.3s;
+}
+
+.swatches[data-hidden] {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .swatch {
@@ -391,7 +344,7 @@ h3 {
   border: 0;
   border-top: 2px solid var(--rule);
   padding: 8px 14px 0 0;
-  min-width: 120px;
+  min-width: 150px;
   font-family: var(--sans);
   font-size: 0.82rem;
   color: var(--muted);
@@ -406,164 +359,6 @@ h3 {
 
 .swatch .numeral {
   font-size: 1em;
-}
-
-/* I. Crane */
-
-.crane .wing {
-  transform-box: view-box;
-  transform-origin: 204px 170px;
-  animation: flap 2.2s ease-in-out infinite;
-}
-
-.crane .wing-far {
-  animation-delay: -0.12s;
-}
-
-.crane-body {
-  transform-box: view-box;
-  transform-origin: 200px 170px;
-  animation: glide 6s ease-in-out infinite;
-}
-
-.crane-shadow {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: shadow 6s ease-in-out infinite;
-}
-
-.flight-path {
-  animation: drift 2.4s linear infinite;
-}
-
-@keyframes flap {
-  0%, 100% { transform: scaleY(1); }
-  50% { transform: scaleY(0.3); }
-}
-
-@keyframes glide {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(8px, -12px) rotate(-1.5deg); }
-}
-
-@keyframes shadow {
-  0%, 100% { transform: scaleX(1); opacity: 0.12; }
-  50% { transform: scaleX(0.86); opacity: 0.07; }
-}
-
-@keyframes drift {
-  to { stroke-dashoffset: -14; }
-}
-
-/* II. Collage */
-
-.collage {
-  position: relative;
-  container-type: size;
-}
-
-.clipping {
-  position: absolute;
-  filter: drop-shadow(1px 3px 3px rgba(40, 24, 10, 0.3));
-}
-
-.clipping-paper {
-  background: var(--grain), #ebe7dc;
-  padding: 1.6cqw 2cqw 2.2cqw;
-  color: #2b2722;
-}
-
-.np-head {
-  margin: 0 0 1cqw;
-  font-size: 4.4cqw;
-  line-height: 1.05;
-}
-
-.np-masthead .np-head {
-  font-family: var(--serif);
-  font-weight: 500;
-  font-size: 5.2cqw;
-  border-bottom: 0.5cqw double rgba(30, 26, 22, 0.7);
-  padding-bottom: 0.8cqw;
-}
-
-.np-italic .np-head {
-  font-family: var(--serif-display);
-  font-style: italic;
-}
-
-.np-bold .np-head {
-  font-family: var(--serif);
-  font-weight: 500;
-}
-
-.np-cols {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2cqw;
-}
-
-.np-line {
-  display: block;
-  height: 0.62cqw;
-  margin-top: 0.85cqw;
-  background: rgba(40, 36, 30, 0.22);
-}
-
-.heatmap {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 0.6cqw;
-  padding: 0.6cqw;
-}
-
-.heatmap span {
-  aspect-ratio: 1;
-  background: var(--vermilion);
-}
-
-.tape {
-  position: absolute;
-  width: 9cqw;
-  height: 3cqw;
-  background: rgba(240, 232, 205, 0.72);
-  box-shadow: 0 0 0 0.2cqw rgba(240, 232, 205, 0.25);
-}
-
-.tape-tr {
-  top: -1.4cqw;
-  right: -3cqw;
-  transform: rotate(38deg);
-}
-
-.tape-tl {
-  top: -1.2cqw;
-  left: -3cqw;
-  transform: rotate(-34deg);
-}
-
-.tag {
-  position: absolute;
-  font-family: var(--sans);
-  font-weight: 600;
-  font-size: 2.5cqw;
-  background: var(--grain), #efe2c6;
-  color: var(--ink);
-  padding: 1cqw 2cqw 1cqw 3.6cqw;
-  clip-path: polygon(9% 0, 100% 0, 100% 100%, 9% 100%, 0 50%);
-  filter: drop-shadow(1px 2px 2px rgba(40, 24, 10, 0.3));
-}
-
-.tag::before {
-  content: "";
-  position: absolute;
-  left: 1.6cqw;
-  top: 50%;
-  width: 1cqw;
-  height: 1cqw;
-  margin-top: -0.5cqw;
-  border-radius: 50%;
-  background: var(--kraft);
 }
 
 /* III. Earth */
@@ -1107,56 +902,56 @@ footer {
     font-size: 0.84rem;
   }
 
-  .forms-stage {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto minmax(0, 1fr) auto;
-    row-gap: 14px;
-    padding-top: calc(var(--header) + 16px);
-    padding-bottom: 14px;
-    align-items: start;
+  .hero-sheet {
+    padding: 34px 26px 30px;
   }
 
-  .forms-text h1 {
-    font-size: 2.5rem;
-    margin-bottom: 14px;
-  }
-
-  .forms-text h2 {
-    font-size: 1.95rem;
-    margin-bottom: 12px;
-  }
-
-  .forms-text .kicker {
-    margin-bottom: 10px;
-  }
-
-  .lede {
+  .hero-sheet .lede {
     font-size: 1rem;
+  }
+
+  .skill-wrap {
+    align-items: flex-end;
+    padding-bottom: 74px;
+  }
+
+  .skill-text {
+    max-width: none;
+    padding: 18px 20px 16px;
+    background: var(--grain), color-mix(in srgb, var(--cotton) 94%, transparent);
+    box-shadow: 0 10px 30px -18px rgba(40, 28, 16, 0.5);
+  }
+
+  .skill-text h2 {
+    font-size: 1.6rem;
     margin-bottom: 12px;
   }
 
-  .scroll-cue {
-    display: none;
+  .skill-text .kicker {
+    margin-bottom: 8px;
   }
 
-  .board {
-    height: 40svh;
+  .skill-points {
+    margin-bottom: 12px;
   }
 
-  .board figcaption {
-    font-size: 0.78rem;
-    margin-top: 8px;
-  }
-
-  .caption-note {
-    display: none;
+  .skill-points li {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
   }
 
   .swatch {
     min-width: 0;
     flex: 1;
-    font-size: 0.74rem;
+    font-size: 0.68rem;
+    line-height: 1.25;
     padding-right: 0;
+    text-align: left;
+  }
+
+  /* Only the numerals on phones; the heading is in the card above. */
+  .swatch .numeral ~ * {
+    display: none;
   }
 
   .section {

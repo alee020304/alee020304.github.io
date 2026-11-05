@@ -1,48 +1,69 @@
 // Facts come from ../../reum (resume/bullet-bank.md, candidate-profile.md).
 // Anything still marked TODO there (metrics, links, unconfirmed names) is left out.
 
-// The opening pop-up book: one project per spread.
-export const FORMS = [
+// The opening: a pile of papers. The top sheet introduces me; each
+// section after it takes a sheet from the pile and folds or cuts it.
+export const INTRO = {
+  kicker: "Computer Science & AI · McGill University, 2026",
+  name: "Ahreum Lee",
+  role: "AI Analyst Intern at PATRY Group, Kingston",
+  summary:
+    "I build with AI, analyse data and lead teams. I like to meet the people I'm building for, I check the work before anyone relies on it, and I build things people keep using."
+};
+
+export const SKILLS = [
   {
-    id: "folded",
+    id: "ai",
     numeral: "I",
-    technique: "The crane",
-    caseId: "adina",
-    title: "An AI nurse, tested before it met anyone.",
-    body:
-      "For an AI voice companion for seniors with memory loss, I built a simulated resident and an LLM judge to test it. Then I went to a care home three times to meet the people it was for.",
-    caption: "ADiNA · Shared Reality Lab, McGill · 2025–26",
-    note: "The crane is a long-life symbol in East Asian paper folding."
+    sheet: "crane",
+    heading: "Working with AI",
+    trait: "I check AI's work before anyone relies on it.",
+    points: [
+      "Built AI-powered internal tools at PATRY Group, now used by accounts receivable, property management and paralegal staff.",
+      "Evaluated an AI nurse for seniors with an LLM-as-a-judge suite, and caught the judge making mistakes of its own.",
+      "Claude Certified Developer – Foundations (Anthropic, 2026). I prototype with Claude, Codex and Gumloop."
+    ],
+    link: { label: "Read the ADiNA case", href: "#case-adina" }
   },
   {
-    id: "collage",
+    id: "data",
     numeral: "II",
-    technique: "The newsstand",
-    rangeId: "complex-collaboration",
-    title: "Two thousand articles, cut into patterns.",
-    body:
-      "For a study of Canadian healthcare reform, I gathered 2,100+ news articles and let a topic model sort them. My supervisor was sceptical of AI, so before anyone relied on the patterns, I checked them against what actually happened.",
-    caption: "Complex Collaboration Lab, McGill · Research Fellow · 2025–26"
+    sheet: "earth",
+    heading: "Data analysis & research",
+    trait: "I go to the source before I trust a result.",
+    points: [
+      "Collected 2,100+ news articles on Canadian healthcare reform, modelled their topics with BERTopic, and checked the trends against real events.",
+      "Built geospatial data pipelines for seismic risk research, and set up the move to a government HPC cluster.",
+      "Visited a care home three times to meet the residents and caregivers an AI system was for."
+    ],
+    link: { label: "Read the OpenQuake spotlight", href: "#case-openquake" }
   },
   {
-    id: "cut",
+    id: "software",
     numeral: "III",
-    technique: "The earth",
-    caseId: "openquake",
-    title: "Inside a researcher's problem.",
-    body:
-      "I extended OpenQuake, an open-source seismic risk engine, in Python, and set up the project's move from engineering-department computers to a government high-performance computing cluster, where large runs take about thirty hours instead of four days.",
-    caption: "OpenQuake · SURE, McGill · 2026"
+    sheet: "house",
+    heading: "Building software",
+    trait: "I build things people keep using.",
+    points: [
+      "A Property Inbox and Landlord and Tenant Board tracker at PATRY: React on Vercel, PostgreSQL and auth on Azure, on Yardi data.",
+      "A retrofit assessment tool at Reconstruct McGill that the team kept extending (React, Django REST, AWS).",
+      "Extensions to OpenQuake, an open-source seismic risk engine, in Python."
+    ],
+    link: { label: "See everything on the graph", href: "#range" }
   },
   {
-    id: "woven",
+    id: "leadership",
     numeral: "IV",
-    technique: "The building",
-    rangeId: "patry",
-    title: "One inbox for three teams.",
-    body:
-      "At PATRY Group I built a Property Inbox and Landlord and Tenant Board tracker on the company's Yardi data. Accounts receivable, property management and paralegal staff all work in it. Now I'm building a maintenance bot for tenants across every property.",
-    caption: "PATRY Group · AI Analyst Intern · 2026 · React, Azure, Vercel"
+    sheet: "dolls",
+    heading: "Leadership",
+    trait: "I find a way in, then bring people with me.",
+    points: [
+      "VP Marketing, GDG on Campus McGill: 100K+ impressions in two months.",
+      "Co-President, AKCSE: led a multidisciplinary executive team and secured $2,000 in extra funding.",
+      "Product manager for a team of four at McHacks 2026.",
+      "Won the ACM CHI 2025 volunteer T-shirt competition, which got me to the conference in Yokohama."
+    ],
+    link: { label: "See everything on the graph", href: "#range" }
   }
 ];
 

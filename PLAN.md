@@ -4,19 +4,20 @@ Supersedes v2 (3D terrain + planet work map). Branch: `paper`.
 
 ## Idea
 
-The same training takes different forms. Each
-project is shown in a different paper technique:
+Recruiters want to know what kind of person this is, in plain words. The page opens
+zoomed in on a pile of papers with a plain intro on the top sheet. Scrolling gathers
+the pile, then each section lifts a sheet from it and folds or cuts it into an object:
 
-| Frame | Technique | Project | Why this form |
-| --- | --- | --- | --- |
-| I | Folded: an origami crane in flight | ADiNA | The crane is a long-life symbol; the project is elder care |
-| II | Collage: torn newsprint on kraft | Complex Collaboration Lab | 2,100+ news articles, cut into topics |
-| III | The earth split open | OpenQuake | Seismic risk |
-| IV | Woven: three colours of strip woven through cream | PATRY Group | One tool used by three teams |
+| Section | Plain line | Sheet |
+| --- | --- | --- |
+| Working with AI | I check AI's work before anyone relies on it. | Red sheet folds into a crane |
+| Data analysis & research | I go to the source before I trust a result. | Blue sheet: circle cut out, becomes the earth |
+| Building software | I build things people keep using. | Kraft sheet folds into a house |
+| Leadership | I find a way in, then bring people with me. | Indigo sheet folded, cut, opened into paper people |
 
-Then two full case studies (ADiNA, OpenQuake), each unfolding like a letter; then the
-range graph (technical × creative on graph paper; hover or tap a pin for a first-person
-line on what I did); recognition; contact.
+Sheets only ever rise from the pile (no closing). Transitions are short; each finished
+object holds for most of its section. Then: ADiNA case, OpenQuake spotlight, the range
+graph, recognition, contact.
 
 ## Design
 
