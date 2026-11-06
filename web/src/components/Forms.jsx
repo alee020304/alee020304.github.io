@@ -14,16 +14,18 @@ import { SHEETS } from "./art/Sheets.jsx";
 
 // Scroll timeline, in units: a short intro, then one long unit per section.
 const INTRO_LEN = 0.7;
-const SECTION_LEN = 1.6;
+const SECTION_LEN = 1.2;
 const TOTAL = INTRO_LEN + SKILLS.length * SECTION_LEN;
 // Share of the opening's scroll by which the pile has gathered.
 export const GATHERED = INTRO_LEN / TOTAL;
-const ARRIVE = 0.1; // share of a section spent lifting the sheet into place
-// The sheet comes out of the pile first, then slowly becomes its object.
-const SHAPE = [0.1, 0.46]; // share of a section spent folding or cutting
-const SHAPE_FOR = { crane: [0.1, 0.46] }; // the crane eases each of its own steps
-const LEAVE = 0.1;
-const TEXT_AT = 0.15; // the text fades in early in the forming, and stays // share of the next section spent moving the old object out
+// Shares of a section (one section is 1.2 screens of scrolling).
+const ARRIVE = 0.13; // lifting the sheet into place
+// The sheet comes out of the pile first, then slowly becomes its object,
+// which holds for the rest of the section.
+const SHAPE = [0.13, 0.62]; // folding or cutting
+const SHAPE_FOR = { crane: [0.13, 0.62] }; // the crane eases each of its own steps
+const LEAVE = 0.12; // of the next section: moving the old object out
+const TEXT_AT = 0.15; // the text fades in this far into the forming, and stays
 
 const narrow = (L) => L.w < 860;
 const smooth = (x) => x * x * (3 - 2 * x);
