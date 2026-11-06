@@ -114,8 +114,8 @@ h3 {
   inset: 0 0 auto;
   z-index: 20;
   height: var(--header);
-  background: color-mix(in srgb, var(--paper) 88%, transparent);
-  backdrop-filter: blur(6px);
+  /* Solid, so nothing scrolling underneath shows through. */
+  background: var(--grain), var(--paper);
   border-bottom: 1px solid color-mix(in srgb, var(--rule) 60%, transparent);
 }
 

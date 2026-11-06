@@ -13,16 +13,17 @@ const ramp = (v, a, b) => smooth(clamp((v - a) / (b - a)));
 const lerp = (a, b, t) => a + (b - a) * t;
 const fmt = (pts) => pts.map(([x, y]) => `${x.toFixed(2)},${y.toFixed(2)}`).join(" ");
 
-/* I. Crane: the sheet is turned and folded in half, then (skipping the
-   steps in between) it opens out as the finished crane (see crane.js). */
+/* I. Crane: the sheet turns on its point into a diamond, then (skipping
+   the folds in between) becomes the finished crane in one move (see
+   crane.js). */
 
 const RED = { front: [194, 78, 51], back: [156, 54, 34], dark: [92, 30, 18] };
 const mix = (a, b, t) => `rgb(${a.map((x, i) => Math.round(x + (b[i] - x) * t)).join(",")})`;
 const fillOf = (l) => mix(l.face > 0 ? RED.front : RED.back, RED.dark, l.shade * 0.45);
 
-const FIRST_STEPS = 2; // turn the square, fold it in half
-const FOLD = [0, 0.5]; // share of the shaping spent on those
-const SWAP = [0.5, 0.8]; // the half-folded sheet gives way to the crane
+const FIRST_STEPS = 1; // turn the square into a diamond
+const FOLD = [0, 0.4]; // share of the shaping spent on that
+const SWAP = [0.45, 0.85]; // the diamond gives way to the crane
 const CRANE = craneAt(1);
 const FIRST_LAYERS = craneAt(1, FIRST_STEPS).length;
 
@@ -44,18 +45,17 @@ function Layer({ i, shape }) {
 }
 
 export function CraneSheet({ shape }) {
-  // Fold edges show once the paper is folded; the flat sheet has none.
-  const strokeOpacity = useTransform(shape, [0, 0.05], [0, 1]);
-  // The crane comes in a little ahead of the folded sheet going, so the
+  // The crane comes in a little ahead of the diamond going, so the
   // swap never looks see-through.
-  const foldOpacity = useTransform(shape, [0.6, SWAP[1]], [1, 0]);
+  const foldOpacity = useTransform(shape, [0.58, SWAP[1]], [1, 0]);
   const foldScale = useTransform(shape, SWAP, [1, 0.8]);
-  const craneOpacity = useTransform(shape, [SWAP[0], 0.66], [0, 1]);
+  const craneOpacity = useTransform(shape, [SWAP[0], 0.68], [0, 1]);
   const craneScale = useTransform(shape, (v) => lerp(0.8, 1, ramp(v, SWAP[0], 1)));
   return (
     <svg viewBox={VIEW} className="sheet-art" role="img" aria-label="A sheet of red paper folded into a crane">
       <g filter="url(#grain)" stroke="#7a2a1a" strokeWidth="0.35" strokeLinejoin="round">
-        <motion.g style={{ opacity: foldOpacity, scale: foldScale, strokeOpacity }}>
+        {/* A plain sheet, no fold edges. */}
+        <motion.g stroke="none" style={{ opacity: foldOpacity, scale: foldScale }}>
           {Array.from({ length: FIRST_LAYERS }, (_, i) => (
             <Layer key={i} i={i} shape={shape} />
           ))}
