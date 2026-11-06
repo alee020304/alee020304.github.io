@@ -3,7 +3,7 @@
 // of the screen. Each section then lifts the next sheet up from the pile
 // (bottom up, like a new page) and folds or cuts it into an object, while
 // the previous object moves on up and out. Each sheet comes out first, then
-// turns quickly into its object, which holds, finished, for the rest. The paper follows
+// is folded or cut slowly into its object, which holds for the rest. The paper follows
 // a spring on the scroll position, so it glides rather than jumping with
 // each wheel tick.
 
@@ -19,11 +19,11 @@ const TOTAL = INTRO_LEN + SKILLS.length * SECTION_LEN;
 // Share of the opening's scroll by which the pile has gathered.
 export const GATHERED = INTRO_LEN / TOTAL;
 const ARRIVE = 0.1; // share of a section spent lifting the sheet into place
-// The sheet comes out of the pile first, then turns quickly into its object.
-const SHAPE = [0.1, 0.26]; // share of a section spent folding or cutting
-const SHAPE_FOR = { crane: [0.1, 0.26] }; // the crane eases each of its own steps
+// The sheet comes out of the pile first, then slowly becomes its object.
+const SHAPE = [0.1, 0.46]; // share of a section spent folding or cutting
+const SHAPE_FOR = { crane: [0.1, 0.46] }; // the crane eases each of its own steps
 const LEAVE = 0.1;
-const TEXT_AT = 0.6; // the text fades in once the object is this far formed // share of the next section spent moving the old object out
+const TEXT_AT = 0.15; // the text fades in early in the forming, and stays // share of the next section spent moving the old object out
 
 const narrow = (L) => L.w < 860;
 const smooth = (x) => x * x * (3 - 2 * x);
@@ -159,7 +159,7 @@ export default function Forms() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const glide = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.0002 });
   // `active` is the section in view (for the swatches). Its text comes in
-  // over the last part of the object's forming, and goes as it leaves.
+  // soon after its object starts forming, and goes as it leaves.
   const [active, setActive] = useState(-1);
   const [shown, setShown] = useState(-1);
   useMotionValueEvent(scrollYProgress, "change", (v) => {
