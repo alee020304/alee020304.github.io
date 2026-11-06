@@ -61,7 +61,7 @@ export default function Range() {
       {/* The graph-paper sheet from the corner pile, now holding the graph. */}
       <motion.div
         className="wrap range-sheet"
-        initial={{ x: "-45vw", y: "35vh", rotate: -16, scale: 0.35, opacity: 0 }}
+        initial={{ x: "45vw", y: "35vh", rotate: 16, scale: 0.35, opacity: 0 }}
         whileInView={{ x: 0, y: 0, rotate: 0, scale: 1, opacity: 1 }}
         viewport={{ once: true, amount: 0.12 }}
         transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}

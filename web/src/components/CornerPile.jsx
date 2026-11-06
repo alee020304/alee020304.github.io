@@ -1,16 +1,17 @@
 // After the opening, the pile of papers stays with the reader, tucked into
-// the bottom-left corner. When the graph comes into view, the graph-paper
+// the bottom-right corner, where the opening left it. When the graph comes into view, the graph-paper
 // sheet leaves the pile: it becomes the sheet the graph is drawn on.
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
+// Offsets match the opening's gathered pile.
 const SHEETS = [
-  { deco: "kraft", x: 0, y: 26, r: 14 },
-  { deco: "washi", x: 30, y: 6, r: -9 },
-  { deco: "news", x: 6, y: 14, r: 4 },
-  { deco: "graph", x: 40, y: 30, r: -16 },
-  { deco: "cotton", x: 16, y: 40, r: -3 }
+  { deco: "washi", x: -18, y: -11, r: -6 },
+  { deco: "graph", x: 19, y: -10, r: 4.5 },
+  { deco: "news", x: 20, y: 11, r: -3 },
+  { deco: "kraft", x: -19, y: 11, r: 7 },
+  { deco: "cotton", x: 2, y: 14, r: -1.5 }
 ];
 
 export default function CornerPile() {
@@ -21,7 +22,7 @@ export default function CornerPile() {
       const forms = document.getElementById("forms");
       const range = document.getElementById("range");
       if (!forms || !range) return;
-      setShow(forms.getBoundingClientRect().bottom < innerHeight * 0.9);
+      setShow(forms.getBoundingClientRect().bottom <= innerHeight + 1);
       setGraphOut(range.getBoundingClientRect().top < innerHeight * 0.75);
     };
     check();
@@ -38,8 +39,8 @@ export default function CornerPile() {
       className="corner-pile"
       aria-hidden="true"
       initial={false}
-      animate={{ opacity: show ? 1 : 0, y: show ? 0 : 80 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      animate={{ opacity: show ? 1 : 0 }}
+      transition={{ duration: 0.25 }}
     >
       {SHEETS.map((s) => {
         const out = s.deco === "graph" && graphOut;
@@ -49,7 +50,7 @@ export default function CornerPile() {
             className={`corner-sheet deco deco-${s.deco}`}
             initial={false}
             animate={{
-              x: out ? 260 : s.x,
+              x: out ? -260 : s.x,
               y: out ? -320 : s.y,
               rotate: out ? 0 : s.r,
               scale: out ? 1.6 : 1,

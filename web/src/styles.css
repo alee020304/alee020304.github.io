@@ -1181,11 +1181,12 @@ footer {
   outline: 0.4cqw solid rgba(59, 47, 34, 0.55);
 }
 
-/* The pile, kept in the corner for the rest of the page. */
+/* The pile, kept in the bottom-right corner for the rest of the page. Its
+   centre sits where the opening gathers it: 64px in, 44px up. */
 .corner-pile {
   position: fixed;
-  left: -34px;
-  bottom: calc(-46px - env(safe-area-inset-bottom, 0px));
+  right: -11px;
+  bottom: calc(-31px - env(safe-area-inset-bottom, 0px));
   width: 150px;
   height: 150px;
   z-index: 0;
@@ -1195,8 +1196,8 @@ footer {
 .corner-sheet {
   position: absolute;
   inset: 0;
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 150px;
   filter: drop-shadow(0 6px 10px rgba(40, 28, 16, 0.18));
 }
 
@@ -1221,12 +1222,14 @@ footer {
 
 @media (max-width: 860px) {
   .corner-pile {
-    left: -26px;
-    bottom: calc(-34px - env(safe-area-inset-bottom, 0px));
+    right: -6px;
+    bottom: calc(-20px - env(safe-area-inset-bottom, 0px));
+    width: 100px;
+    height: 100px;
   }
 
   .corner-sheet {
-    width: 84px;
-    height: 84px;
+    width: 100px;
+    height: 100px;
   }
 }

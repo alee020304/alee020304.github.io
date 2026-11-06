@@ -1,8 +1,7 @@
 // Square sheets that turn into objects. Each takes `shape`, a motion value
-// from 0 (a flat sheet) to 1 (the finished object), played on a clock.
+// from 0 (a flat sheet) to 1 (the finished object), driven by scroll.
 // At 0 every sheet is a plain square, so it can sit in the pile.
 
-import { useEffect, useRef } from "react";
 import { motion, useTransform } from "framer-motion";
 import EarthCut from "./EarthCut.jsx";
 import { craneAt, MAX_LAYERS } from "./crane.js";
@@ -49,56 +48,13 @@ export function CraneSheet({ shape }) {
   );
 }
 
-/* Scissors that ride along a path as `progress` goes 0 → 1, snipping. The
-   cutting point is the glyph's origin; the blades point along the path.
-   SVG transforms are set directly, since motion would treat them as CSS. */
-function Scissors({ path, progress, handle = "#26344f" }) {
-  const g = useRef(null);
-  const up = useRef(null);
-  const down = useRef(null);
-  useEffect(() => {
-    const place = (p) => {
-      const el = path.current;
-      if (!el || !g.current) return;
-      const on = p > 0 && p < 1;
-      g.current.setAttribute("opacity", on ? 1 : 0);
-      if (!on) return;
-      const len = el.getTotalLength();
-      const a = el.getPointAtLength(len * p);
-      const b = el.getPointAtLength(Math.min(len, len * p + 0.8));
-      const angle = (Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI;
-      g.current.setAttribute("transform", `translate(${a.x} ${a.y}) rotate(${angle}) scale(1.4)`);
-      const snip = 8 + 8 * Math.sin(p * 70);
-      up.current.setAttribute("transform", `rotate(${-snip} -2 0)`);
-      down.current.setAttribute("transform", `rotate(${snip} -2 0)`);
-    };
-    place(progress.get());
-    return progress.on("change", place);
-  }, [path, progress]);
-  const half = (y, ref) => (
-    <g ref={ref}>
-      <polygon points={`-2,0 6,${-y * 0.2} 6.4,${y * 0.25}`} fill="#c9ced4" stroke="#59626d" strokeWidth="0.25" />
-      <circle cx="-6.2" cy={y * 2.6} r="1.9" fill="none" stroke={handle} strokeWidth="0.9" />
-      <path d={`M-2,0 L-4.6,${y * 1.6}`} stroke={handle} strokeWidth="0.9" />
-    </g>
-  );
-  return (
-    <g ref={g} opacity="0" aria-hidden="true">
-      {half(-1, down)}
-      {half(1, up)}
-      <circle cx="-2" cy="0" r="0.5" fill="#59626d" />
-    </g>
-  );
-}
-
-/* II. Earth: cut. Scissors cut a circle, the offcut falls away, and the
-   circle lifts off as the earth, its layers rising. */
+/* II. Earth: cut. A circle is cut, the offcut falls away, and the circle
+   lifts off as the earth, its layers rising. */
 
 const BLUE = "#5d7895";
 const CIRCLE = "M50,10 A40,40 0 1,1 50,90 A40,40 0 1,1 50,10";
 
 export function EarthSheet({ shape }) {
-  const path = useRef(null);
   const cut = useTransform(shape, (v) => clamp((v - 0.04) / 0.46));
   const cutOpacity = useTransform(shape, [0.6, 0.7], [1, 0]);
   const discScale = useTransform(shape, (v) => 1 + ramp(v, 0.5, 0.62) * 0.04);
@@ -109,7 +65,7 @@ export function EarthSheet({ shape }) {
   const lift = useTransform(shape, [0.84, 1], [0, 1]);
   return (
     <div className="sheet-stack">
-      <svg viewBox={VIEW} className="sheet-art" role="img" aria-label="Scissors cut a circle from a blue sheet; it becomes the earth">
+      <svg viewBox={VIEW} className="sheet-art" role="img" aria-label="A circle is cut from a blue sheet and becomes the earth">
         <g filter="url(#grain)">
           <motion.path
             d="M0,0 H100 V100 H0 Z M50,10 A40,40 0 1,0 50.01,10 Z"
@@ -120,14 +76,13 @@ export function EarthSheet({ shape }) {
           <motion.circle cx="50" cy="50" r="40" fill={BLUE} style={{ scale: discScale, transformOrigin: "50px 50px" }} />
         </g>
         <motion.path
-          ref={path}
+         
           d={CIRCLE}
           fill="none"
           stroke="#f2e8d5"
           strokeWidth="0.7"
           style={{ pathLength: cut, opacity: cutOpacity }}
         />
-        <Scissors path={path} progress={cut} />
       </svg>
       <motion.div className="sheet-earth" style={{ opacity: earthOpacity }}>
         <EarthCut lift={lift} />
@@ -163,7 +118,6 @@ function Face({ box, origin, transform, out, clip, children, art }) {
 }
 
 export function HouseSheet({ shape }) {
-  const path = useRef(null);
   const cut = useTransform(shape, (v) => clamp((v - 0.02) / 0.3));
   const cutOpacity = useTransform(shape, [0.36, 0.44], [1, 0]);
   const offOpacity = useTransform(shape, [0.32, 0.42], [1, 0]);
@@ -210,19 +164,18 @@ export function HouseSheet({ shape }) {
           </Face>
         </Face>
         <motion.svg viewBox="0 0 100 100" className="house-cuts" style={{ opacity: cutOpacity }}>
-          <motion.path ref={path} d={NET} fill="none" stroke="#3b2f22" strokeWidth="0.45" style={{ pathLength: cut }} />
+          <motion.path d={NET} fill="none" stroke="#3b2f22" strokeWidth="0.45" style={{ pathLength: cut }} />
           {/* Where it will fold. */}
           <motion.path d={CREASES} fill="none" stroke="#3b2f22" strokeWidth="0.35" strokeDasharray="1.4 1.2" style={{ opacity: creases }} />
-          <Scissors path={path} progress={cut} />
         </motion.svg>
       </motion.div>
     </div>
   );
 }
 
-/* IV. Paper people: the sheet is folded like an accordion, a half-figure is
-   drawn on top, scissors cut along it, the scraps fall away, and the chain
-   opens out, hand in hand. */
+/* IV. Paper people: the sheet is folded like an accordion, a figure is
+   drawn on top and cut out, the scraps fall away, and the chain opens out,
+   hand in hand. */
 
 const INDIGO = "#2f4366";
 const INDIGO_FOLD = "#3b5279";
@@ -249,7 +202,6 @@ function Panel({ i, shape }) {
 }
 
 export function DollSheet({ shape }) {
-  const path = useRef(null);
   const pencil = useTransform(shape, [0.22, 0.3, 0.6, 0.64], [0, 1, 1, 0]);
   const cut = useTransform(shape, (v) => clamp((v - 0.32) / 0.3));
   const cutOpacity = useTransform(shape, [0.31, 0.32, 0.62, 0.65], [0, 1, 1, 0]);
@@ -272,8 +224,7 @@ export function DollSheet({ shape }) {
       </g>
       <g transform="translate(38.25 0)">
         <motion.path d={DOLL} fill="none" stroke="#e8e2d6" strokeWidth="0.4" strokeDasharray="1 1" style={{ opacity: pencil }} />
-        <motion.path ref={path} d={DOLL} fill="none" stroke="#f2e8d5" strokeWidth="0.6" style={{ pathLength: cut, opacity: cutOpacity }} />
-        <Scissors path={path} progress={cut} handle="#c24e33" />
+        <motion.path d={DOLL} fill="none" stroke="#f2e8d5" strokeWidth="0.6" style={{ pathLength: cut, opacity: cutOpacity }} />
       </g>
     </svg>
   );
