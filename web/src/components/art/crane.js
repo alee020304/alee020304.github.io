@@ -193,15 +193,15 @@ const BEFORE = [];
   });
 }
 
-const TOTAL_W = STEPS.reduce((s, st) => s + st.w, 0);
 const smooth = (x) => x * x * (3 - 2 * x);
 
-// Layers at progress v (0 flat sheet, 1 finished crane), framed to fit a
+// Layers at progress v through the first `upTo` steps (0 flat sheet, 1 those
+// steps done; by default all of them, the finished crane), framed to fit a
 // 100 × 100 box.
-export function craneAt(v) {
-  let at = Math.min(1, Math.max(0, v)) * TOTAL_W;
+export function craneAt(v, upTo = STEPS.length) {
+  let at = Math.min(1, Math.max(0, v)) * STEPS.slice(0, upTo).reduce((s, st) => s + st.w, 0);
   let i = 0;
-  while (i < STEPS.length - 1 && at > STEPS[i].w) at -= STEPS[i++].w;
+  while (i < upTo - 1 && at > STEPS[i].w) at -= STEPS[i++].w;
   // Each step moves over its first 85% and rests briefly.
   let t = smooth(Math.min(1, at / (STEPS[i].w * 0.85)));
   const layers = v <= 0 ? SQUARE.map((l) => ({ ...l, shade: 0 })) : applyOps(BEFORE[i], STEPS[i].ops, t);
@@ -220,5 +220,3 @@ export function craneAt(v) {
   const cy = (y0 + y1) / 2;
   return layers.map((l) => ({ ...l, pts: l.pts.map(([x, y]) => [50 + (x - cx) * s, 50 + (y - cy) * s]) }));
 }
-
-export const MAX_LAYERS = Math.max(...BEFORE.map((ls) => ls.length), applyOps(BEFORE.at(-1), STEPS.at(-1).ops, 1).length);
