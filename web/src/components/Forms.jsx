@@ -16,11 +16,14 @@ import { SHEETS } from "./art/Sheets.jsx";
 const INTRO_LEN = 0.7;
 const SECTION_LEN = 1.6;
 const TOTAL = INTRO_LEN + SKILLS.length * SECTION_LEN;
+// Share of the opening's scroll by which the pile has gathered.
+export const GATHERED = INTRO_LEN / TOTAL;
 const ARRIVE = 0.1; // share of a section spent lifting the sheet into place
 const SHAPE = [0.04, 0.32]; // share of a section spent folding or cutting
 // The crane rushes its early folds, so it finishes no later than the rest.
 const SHAPE_FOR = { crane: [0.03, 0.26] };
-const LEAVE = 0.1; // share of the next section spent moving the old object out
+const LEAVE = 0.1;
+const TEXT_AT = 0.6; // the text fades in once the object is this far formed // share of the next section spent moving the old object out
 
 const narrow = (L) => L.w < 860;
 const smooth = (x) => x * x * (3 - 2 * x);
@@ -30,7 +33,7 @@ const lerp = (a, b, t) => a + (b - a) * t;
 // Where each sheet lies in the spread-out pile: x, y as a share of the
 // viewport, and rotation. Decorative sheets have a texture; section sheets
 // have the index of their section.
-const PILE = [
+export const PILE = [
   { deco: "washi", x: -0.36, y: -0.3, r: -12 },
   { deco: "graph", x: 0.37, y: -0.28, r: 9 },
   { deco: "news", x: 0.4, y: 0.3, r: -6 },
@@ -83,7 +86,9 @@ function sheetState(v, entry, L) {
   const u = v * TOTAL;
   const z = smooth(clamp(u / INTRO_LEN));
   const pile = pilePose(entry, z, L);
-  if (entry.section === undefined) return { ...pile, o: 1, shape: 0, zi: 1 };
+  // Once gathered, the decorative sheets hand over to CornerPile, which
+  // draws them in the same spot, so there is only ever one pile.
+  if (entry.section === undefined) return { ...pile, o: z < 1 ? 1 : 0, shape: 0, zi: 1 };
 
   const t = (u - INTRO_LEN - entry.section * SECTION_LEN) / SECTION_LEN;
   const arrive = smooth(clamp(t / ARRIVE));
@@ -153,8 +158,8 @@ export default function Forms() {
   const L = layout(useViewport());
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const glide = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.0002 });
-  // `active` is the section in view (for the swatches). Its text waits until
-  // the object on screen has finished forming, and goes as it leaves.
+  // `active` is the section in view (for the swatches). Its text comes in
+  // over the last part of the object's forming, and goes as it leaves.
   const [active, setActive] = useState(-1);
   const [shown, setShown] = useState(-1);
   useMotionValueEvent(scrollYProgress, "change", (v) => {
@@ -165,8 +170,8 @@ export default function Forms() {
     const u = v * TOTAL - INTRO_LEN;
     const i = Math.floor(u / SECTION_LEN);
     const t = u / SECTION_LEN - i;
-    const [, done] = SHAPE_FOR[SKILLS[i]?.sheet] || SHAPE;
-    const ok = i >= 0 && i < SKILLS.length && t >= done && (t < 0.97 || i === SKILLS.length - 1);
+    const [s0, s1] = SHAPE_FOR[SKILLS[i]?.sheet] || SHAPE;
+    const ok = i >= 0 && i < SKILLS.length && t >= s0 + (s1 - s0) * TEXT_AT && (t < 0.97 || i === SKILLS.length - 1);
     setShown(ok ? i : -1);
   });
 

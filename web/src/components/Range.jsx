@@ -30,7 +30,7 @@ function Card({ item }) {
       <p className="range-body">{item.body}</p>
       {item.caseId && (
         <a className="text-link" href={`#case-${item.caseId}`}>
-          Read the case
+          Read more
         </a>
       )}
       {item.href && (

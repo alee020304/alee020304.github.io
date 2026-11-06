@@ -1,28 +1,29 @@
-// After the opening, the pile of papers stays with the reader, tucked into
-// the bottom-right corner, where the opening left it. When the graph comes into view, the graph-paper
-// sheet leaves the pile: it becomes the sheet the graph is drawn on.
+// Once the opening has gathered the pile into the bottom-right corner, this
+// fixed copy takes over its decorative sheets, so the pile stays put for the
+// rest of the page. When the graph comes into view, the graph-paper sheet
+// leaves the pile: it becomes the sheet the graph is drawn on.
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { GATHERED, PILE } from "./Forms.jsx";
 
-// Offsets match the opening's gathered pile.
-const SHEETS = [
-  { deco: "washi", x: -18, y: -11, r: -6 },
-  { deco: "graph", x: 19, y: -10, r: 4.5 },
-  { deco: "news", x: 20, y: 11, r: -3 },
-  { deco: "kraft", x: -19, y: 11, r: 7 },
-  { deco: "cotton", x: 2, y: 14, r: -1.5 }
-];
+// Laid out exactly as the opening gathers them (see pilePose).
+const sheetsFor = (w, h) =>
+  PILE.filter((e) => e.deco).map((e) => ({ deco: e.deco, x: e.x * w * 0.04, y: e.y * h * 0.04, r: e.r * 0.5 }));
 
 export default function CornerPile() {
   const [show, setShow] = useState(false);
   const [graphOut, setGraphOut] = useState(false);
+  const [vp, setVp] = useState(() => [innerWidth, innerHeight]);
   useEffect(() => {
     const check = () => {
       const forms = document.getElementById("forms");
       const range = document.getElementById("range");
       if (!forms || !range) return;
-      setShow(forms.getBoundingClientRect().bottom <= innerHeight + 1);
+      const scrolled = -forms.getBoundingClientRect().top / (forms.offsetHeight - innerHeight);
+      // Slightly early, so it is in place before the opening's copy goes.
+      setShow(scrolled >= GATHERED * 0.97);
+      setVp([innerWidth, innerHeight]);
       setGraphOut(range.getBoundingClientRect().top < innerHeight * 0.75);
     };
     check();
@@ -40,9 +41,9 @@ export default function CornerPile() {
       aria-hidden="true"
       initial={false}
       animate={{ opacity: show ? 1 : 0 }}
-      transition={{ duration: 0.25 }}
+      transition={{ duration: 0 }}
     >
-      {SHEETS.map((s) => {
+      {sheetsFor(...vp).map((s) => {
         const out = s.deco === "graph" && graphOut;
         return (
           <motion.div

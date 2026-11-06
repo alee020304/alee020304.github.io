@@ -23,7 +23,7 @@ export const SKILLS = [
       "Evaluated an AI nurse for seniors with an LLM-as-a-judge suite, and caught the judge making mistakes of its own.",
       "Claude Certified Developer – Foundations (Anthropic, 2026). I prototype with Claude, Codex and Gumloop."
     ],
-    link: { label: "Read the ADiNA case", href: "#case-adina" }
+    link: { label: "More on ADiNA", href: "#case-adina" }
   },
   {
     id: "data",
@@ -36,7 +36,7 @@ export const SKILLS = [
       "Built geospatial data pipelines for seismic risk research, and set up the move to a government HPC cluster.",
       "Visited a care home three times to meet the residents and caregivers an AI system was for."
     ],
-    link: { label: "Read the OpenQuake spotlight", href: "#case-openquake" }
+    link: { label: "More on OpenQuake", href: "#case-openquake" }
   },
   {
     id: "software",

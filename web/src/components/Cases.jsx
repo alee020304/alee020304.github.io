@@ -1,5 +1,5 @@
-// Two projects, kept short: a title, a line and a button. The button (or a
-// link to #case-<id>) unfolds the full case like a letter.
+// Some of my work: a card per project, each with a button (or a link to
+// #case-<id>) that opens the full write-up under the cards.
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -95,62 +95,65 @@ function CaseSheet({ c }) {
   );
 }
 
-function Case({ c }) {
-  const [open, setOpen] = useState(false);
-  const id = `case-${c.id}`;
-  useEffect(() => {
-    const check = () => location.hash === `#${id}` && setOpen(true);
-    check();
-    addEventListener("hashchange", check);
-    return () => removeEventListener("hashchange", check);
-  }, [id]);
-  const spotlight = c.size === "spotlight";
+const metaOf = (c, k) => c.meta.find(([key]) => key === k)?.[1];
 
+// A short card: what it was, my role, and a button for the full write-up.
+function Card({ c, open, onToggle }) {
   return (
-    <article id={id} className={spotlight ? "case spotlight" : "case"}>
-      <div className="case-row">
-        <header className="case-head">
-          <p className="kicker">
-            <span className="numeral">{c.numeral}</span> {spotlight ? "Spotlight" : "Case"}
-          </p>
-          <h3>{c.name}</h3>
-          <p className="case-subtitle">{c.subtitle}</p>
-        </header>
-        <button className="case-toggle" aria-expanded={open} aria-controls={`${id}-body`} onClick={() => setOpen(!open)}>
-          {open ? "Fold it back up" : spotlight ? "Read the spotlight" : "Read the case"}
-          <span aria-hidden="true">{open ? "↑" : "↓"}</span>
-        </button>
-      </div>
-
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            id={`${id}-body`}
-            className="case-fold"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <CaseSheet c={c} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <article id={`case-${c.id}`} className={"work-card" + (open ? " open" : "")}>
+      <p className="work-card-meta">
+        {metaOf(c, "Role")} · {metaOf(c, "When")}
+      </p>
+      <h3>{c.name}</h3>
+      <p className="work-card-sub">{c.subtitle}</p>
+      <button className="case-toggle" aria-expanded={open} aria-controls="case-body" onClick={onToggle}>
+        {open ? "Close" : "Read more"}
+        <span aria-hidden="true">{open ? "↑" : "↓"}</span>
+      </button>
     </article>
   );
 }
 
 export default function Cases() {
+  const [openId, setOpenId] = useState(null);
+  useEffect(() => {
+    const check = () => {
+      const c = CASES.find((c) => location.hash === `#case-${c.id}`);
+      if (c) setOpenId(c.id);
+    };
+    check();
+    addEventListener("hashchange", check);
+    return () => removeEventListener("hashchange", check);
+  }, []);
+  const open = CASES.find((c) => c.id === openId);
+
   return (
     <section id="cases" className="section cases">
       <div className="wrap">
         <div className="section-head">
-          <h2>In depth.</h2>
-          <p>Two projects, opened up: what I built, what I found, and what it meant for me.</p>
+          <h2>Some of my work.</h2>
+          <p>Two projects worth a closer look.</p>
         </div>
-        {CASES.map((c) => (
-          <Case key={c.id} c={c} />
-        ))}
+        <div className="work-cards">
+          {CASES.map((c) => (
+            <Card key={c.id} c={c} open={c.id === openId} onToggle={() => setOpenId(c.id === openId ? null : c.id)} />
+          ))}
+        </div>
+        <AnimatePresence initial={false} mode="wait">
+          {open && (
+            <motion.div
+              key={open.id}
+              id="case-body"
+              className={"case-fold" + (open.size === "spotlight" ? " spotlight" : "")}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <CaseSheet c={open} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
