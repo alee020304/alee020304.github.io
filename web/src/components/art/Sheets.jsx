@@ -1,7 +1,8 @@
 // Square sheets that turn into objects. Each takes `shape`, a motion value
-// from 0 (a flat sheet) to 1 (the finished object), driven by scroll.
+// from 0 (a flat sheet) to 1 (the finished object), played on a clock.
 // At 0 every sheet is a plain square, so it can sit in the pile.
 
+import { useEffect, useRef } from "react";
 import { motion, useTransform } from "framer-motion";
 import EarthCut from "./EarthCut.jsx";
 import { craneAt, MAX_LAYERS } from "./crane.js";
@@ -48,39 +49,85 @@ export function CraneSheet({ shape }) {
   );
 }
 
-/* II. Earth: cut. A circle is cut out, the offcut drops away, the earth appears. */
+/* Scissors that ride along a path as `progress` goes 0 → 1, snipping. The
+   cutting point is the glyph's origin; the blades point along the path.
+   SVG transforms are set directly, since motion would treat them as CSS. */
+function Scissors({ path, progress, handle = "#26344f" }) {
+  const g = useRef(null);
+  const up = useRef(null);
+  const down = useRef(null);
+  useEffect(() => {
+    const place = (p) => {
+      const el = path.current;
+      if (!el || !g.current) return;
+      const on = p > 0 && p < 1;
+      g.current.setAttribute("opacity", on ? 1 : 0);
+      if (!on) return;
+      const len = el.getTotalLength();
+      const a = el.getPointAtLength(len * p);
+      const b = el.getPointAtLength(Math.min(len, len * p + 0.8));
+      const angle = (Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI;
+      g.current.setAttribute("transform", `translate(${a.x} ${a.y}) rotate(${angle}) scale(1.4)`);
+      const snip = 8 + 8 * Math.sin(p * 70);
+      up.current.setAttribute("transform", `rotate(${-snip} -2 0)`);
+      down.current.setAttribute("transform", `rotate(${snip} -2 0)`);
+    };
+    place(progress.get());
+    return progress.on("change", place);
+  }, [path, progress]);
+  const half = (y, ref) => (
+    <g ref={ref}>
+      <polygon points={`-2,0 6,${-y * 0.2} 6.4,${y * 0.25}`} fill="#c9ced4" stroke="#59626d" strokeWidth="0.25" />
+      <circle cx="-6.2" cy={y * 2.6} r="1.9" fill="none" stroke={handle} strokeWidth="0.9" />
+      <path d={`M-2,0 L-4.6,${y * 1.6}`} stroke={handle} strokeWidth="0.9" />
+    </g>
+  );
+  return (
+    <g ref={g} opacity="0" aria-hidden="true">
+      {half(-1, down)}
+      {half(1, up)}
+      <circle cx="-2" cy="0" r="0.5" fill="#59626d" />
+    </g>
+  );
+}
+
+/* II. Earth: cut. Scissors cut a circle, the offcut falls away, and the
+   circle lifts off as the earth, its layers rising. */
 
 const BLUE = "#5d7895";
+const CIRCLE = "M50,10 A40,40 0 1,1 50,90 A40,40 0 1,1 50,10";
 
 export function EarthSheet({ shape }) {
-  const cut = useTransform(shape, (v) => ramp(v, 0.02, 0.4));
+  const path = useRef(null);
+  const cut = useTransform(shape, (v) => clamp((v - 0.04) / 0.46));
   const cutOpacity = useTransform(shape, [0.6, 0.7], [1, 0]);
-  const offY = useTransform(shape, (v) => ramp(v, 0.42, 0.72) * 40);
-  const offRotate = useTransform(shape, (v) => ramp(v, 0.42, 0.72) * 9);
-  const offOpacity = useTransform(shape, [0.5, 0.72], [1, 0]);
-  const earthOpacity = useTransform(shape, [0.62, 0.85], [0, 1]);
-  const lift = useTransform(shape, [0.75, 1], [0, 1]);
+  const discScale = useTransform(shape, (v) => 1 + ramp(v, 0.5, 0.62) * 0.04);
+  const offY = useTransform(shape, (v) => ramp(v, 0.54, 0.8) * 50);
+  const offRotate = useTransform(shape, (v) => ramp(v, 0.54, 0.8) * 12);
+  const offOpacity = useTransform(shape, [0.6, 0.8], [1, 0]);
+  const earthOpacity = useTransform(shape, [0.68, 0.84], [0, 1]);
+  const lift = useTransform(shape, [0.84, 1], [0, 1]);
   return (
     <div className="sheet-stack">
-      <svg viewBox={VIEW} className="sheet-art" role="img" aria-label="A blue sheet with a circle cut from it">
+      <svg viewBox={VIEW} className="sheet-art" role="img" aria-label="Scissors cut a circle from a blue sheet; it becomes the earth">
         <g filter="url(#grain)">
-          <circle cx="50" cy="50" r="40" fill={BLUE} />
           <motion.path
             d="M0,0 H100 V100 H0 Z M50,10 A40,40 0 1,0 50.01,10 Z"
             fillRule="evenodd"
             fill={BLUE}
             style={{ y: offY, rotate: offRotate, opacity: offOpacity, transformOrigin: "50% 100%" }}
           />
+          <motion.circle cx="50" cy="50" r="40" fill={BLUE} style={{ scale: discScale, transformOrigin: "50px 50px" }} />
         </g>
-        <motion.circle
-          cx="50"
-          cy="50"
-          r="40"
+        <motion.path
+          ref={path}
+          d={CIRCLE}
           fill="none"
           stroke="#f2e8d5"
-          strokeWidth="0.8"
+          strokeWidth="0.7"
           style={{ pathLength: cut, opacity: cutOpacity }}
         />
+        <Scissors path={path} progress={cut} />
       </svg>
       <motion.div className="sheet-earth" style={{ opacity: earthOpacity }}>
         <EarthCut lift={lift} />
@@ -98,6 +145,7 @@ export function EarthSheet({ shape }) {
 // roof panels 16 wide with a little overhang.
 const NET =
   "M50,8 L62,18 L62,38 L82,38 L82,36 L98,36 L98,64 L82,64 L82,62 L62,62 L62,82 L50,92 L38,82 L38,62 L18,62 L18,64 L2,64 L2,36 L18,36 L18,38 L38,38 L38,18 Z";
+const CREASES = "M38,38 H62 V62 H38 Z M18,38 V62 M82,38 V62";
 const GABLE_DOWN = "polygon(0 0, 100% 0, 100% 66.67%, 50% 100%, 0 66.67%)";
 const GABLE_UP = "polygon(50% 0, 100% 33.33%, 100% 100%, 0 100%, 0 33.33%)";
 
@@ -115,17 +163,21 @@ function Face({ box, origin, transform, out, clip, children, art }) {
 }
 
 export function HouseSheet({ shape }) {
-  const cut = useTransform(shape, (v) => ramp(v, 0.02, 0.24));
-  const cutOpacity = useTransform(shape, [0.28, 0.38], [1, 0]);
-  const offOpacity = useTransform(shape, [0.24, 0.38], [1, 0]);
-  const offY = useTransform(shape, (v) => `${ramp(v, 0.24, 0.4) * 6}cqw`);
-  const wall = (v) => ramp(v, 0.34, 0.66) * 90;
-  const roof = (v) => ramp(v, 0.6, 0.8) * 50;
-  const rx = (sign) => useTransform(shape, (v) => `rotateX(${sign * wall(v)}deg)`);
-  const ry = (sign, f = wall) => useTransform(shape, (v) => `rotateY(${sign * f(v)}deg)`);
+  const path = useRef(null);
+  const cut = useTransform(shape, (v) => clamp((v - 0.02) / 0.3));
+  const cutOpacity = useTransform(shape, [0.36, 0.44], [1, 0]);
+  const offOpacity = useTransform(shape, [0.32, 0.42], [1, 0]);
+  const offY = useTransform(shape, (v) => `${ramp(v, 0.32, 0.46) * 6}cqw`);
+  const creases = useTransform(shape, [0.36, 0.42, 0.5, 0.56], [0, 1, 1, 0]);
+  // Front and back walls first, then the sides, then the roof.
+  const ends = (v) => ramp(v, 0.46, 0.64) * 90;
+  const sides = (v) => ramp(v, 0.56, 0.74) * 90;
+  const roof = (v) => ramp(v, 0.72, 0.88) * 50;
+  const rx = (sign) => useTransform(shape, (v) => `rotateX(${sign * ends(v)}deg)`);
+  const ry = (sign, f = sides) => useTransform(shape, (v) => `rotateY(${sign * f(v)}deg)`);
   const board = useTransform(shape, (v) => {
-    const t = ramp(v, 0.3, 0.88);
-    return `translateY(${t * 12}cqw) scale(${1 + ramp(v, 0.4, 0.9) * 0.9}) rotateX(${t * 56}deg) rotateZ(${t * -34}deg)`;
+    const t = ramp(v, 0.42, 0.92);
+    return `translateY(${t * 12}cqw) scale(${1 + ramp(v, 0.46, 0.94) * 0.9}) rotateX(${t * 56}deg) rotateZ(${t * -34}deg)`;
   });
   const pane = (x, y, w, h) => <i className="hw" style={{ left: `${x}%`, top: `${y}%`, width: `${w}%`, height: `${h}%` }} />;
 
@@ -158,52 +210,71 @@ export function HouseSheet({ shape }) {
           </Face>
         </Face>
         <motion.svg viewBox="0 0 100 100" className="house-cuts" style={{ opacity: cutOpacity }}>
-          <motion.path d={NET} fill="none" stroke="#3b2f22" strokeWidth="0.45" style={{ pathLength: cut }} />
+          <motion.path ref={path} d={NET} fill="none" stroke="#3b2f22" strokeWidth="0.45" style={{ pathLength: cut }} />
+          {/* Where it will fold. */}
+          <motion.path d={CREASES} fill="none" stroke="#3b2f22" strokeWidth="0.35" strokeDasharray="1.4 1.2" style={{ opacity: creases }} />
+          <Scissors path={path} progress={cut} />
         </motion.svg>
       </motion.div>
     </div>
   );
 }
 
-/* IV. Paper people: folded like an accordion, cut once, opened into a chain. */
+/* IV. Paper people: the sheet is folded like an accordion, a half-figure is
+   drawn on top, scissors cut along it, the scraps fall away, and the chain
+   opens out, hand in hand. */
 
 const INDIGO = "#2f4366";
 const INDIGO_FOLD = "#3b5279";
-const DOLL = "M0,36 L25,36 L25,44 L18,44 L18,62 L22,96 L14,96 L12.5,72 L11,96 L3,96 L7,62 L7,44 L0,44 Z";
+// One figure, head included, in a 25-wide panel. The hands reach both edges,
+// so the cut figures stay joined.
+const DOLL =
+  "M0,36 L9.5,36 L9.5,31.5 A8,8 0 1,1 15.5,31.5 L15.5,36 L25,36 L25,44 L18,44 L18,62 L22,96 L14,96 L12.5,72 L11,96 L3,96 L7,62 L7,44 L0,44 Z";
+
+// How folded the accordion is: closes, stays shut for the cut, opens.
+const folded = (v) => (v < 0.24 ? ramp(v, 0, 0.22) : v < 0.74 ? 1 : 1 - ramp(v, 0.74, 1));
 
 function Panel({ i, shape }) {
-  const x = useTransform(shape, (v) => {
-    const folded = v < 0.3 ? ramp(v, 0, 0.3) : v < 0.62 ? 1 : 1 - ramp(v, 0.62, 1);
-    return lerp(i * 25, 37.5, folded);
-  });
-  const sheetOpacity = useTransform(shape, [0.59, 0.61], [1, 0]);
-  const dollOpacity = useTransform(shape, [0.59, 0.61], [0, 1]);
+  // Stacked panels sit a hair apart so the folds show.
+  const x = useTransform(shape, (v) => lerp(i * 25, 37.5 + (i - 1.5) * 0.5, folded(v)));
+  const sheetOpacity = useTransform(shape, [0.63, 0.64], [1, 0]);
+  const dollOpacity = useTransform(shape, [0.63, 0.64], [0, 1]);
   const fill = i % 2 ? INDIGO_FOLD : INDIGO;
   return (
     <motion.g style={{ x }}>
       <motion.rect width="25" height="100" fill={fill} style={{ opacity: sheetOpacity }} />
-      <motion.g style={{ opacity: dollOpacity }} fill={fill}>
-        <circle cx="12.5" cy="24" r="8" />
-        <path d={DOLL} />
-      </motion.g>
+      <motion.path d={DOLL} fill={fill} style={{ opacity: dollOpacity }} />
     </motion.g>
   );
 }
 
 export function DollSheet({ shape }) {
-  const cut = useTransform(shape, (v) => ramp(v, 0.32, 0.58));
-  const cutOpacity = useTransform(shape, [0.3, 0.32, 0.6, 0.64], [0, 1, 1, 0]);
+  const path = useRef(null);
+  const pencil = useTransform(shape, [0.22, 0.3, 0.6, 0.64], [0, 1, 1, 0]);
+  const cut = useTransform(shape, (v) => clamp((v - 0.32) / 0.3));
+  const cutOpacity = useTransform(shape, [0.31, 0.32, 0.62, 0.65], [0, 1, 1, 0]);
+  const scrapY = useTransform(shape, (v) => ramp(v, 0.63, 0.8) * 44);
+  const scrapRotate = useTransform(shape, (v) => ramp(v, 0.63, 0.8) * -10);
+  const scrapOpacity = useTransform(shape, [0.62, 0.64, 0.72, 0.8], [0, 1, 1, 0]);
   return (
-    <svg viewBox={VIEW} className="sheet-art" role="img" aria-label="An indigo sheet cut into a chain of paper people">
+    <svg viewBox={VIEW} className="sheet-art" role="img" aria-label="An indigo sheet folded, cut and opened into a chain of paper people">
       <g filter="url(#grain)">
         {[3, 2, 1, 0].map((i) => (
           <Panel key={i} i={i} shape={shape} />
         ))}
+        <motion.path
+          d={`M0,0 H25 V100 H0 Z ${DOLL}`}
+          fillRule="evenodd"
+          fill={INDIGO}
+          transform="translate(38.25 0)"
+          style={{ y: scrapY, rotate: scrapRotate, opacity: scrapOpacity, transformOrigin: "50% 100%" }}
+        />
       </g>
-      <motion.g transform="translate(37.5 0)" fill="none" stroke="#f2e8d5" strokeWidth="0.6" style={{ opacity: cutOpacity }}>
-        <motion.circle cx="12.5" cy="24" r="8" style={{ pathLength: cut }} />
-        <motion.path d={DOLL} style={{ pathLength: cut }} />
-      </motion.g>
+      <g transform="translate(38.25 0)">
+        <motion.path d={DOLL} fill="none" stroke="#e8e2d6" strokeWidth="0.4" strokeDasharray="1 1" style={{ opacity: pencil }} />
+        <motion.path ref={path} d={DOLL} fill="none" stroke="#f2e8d5" strokeWidth="0.6" style={{ pathLength: cut, opacity: cutOpacity }} />
+        <Scissors path={path} progress={cut} handle="#c24e33" />
+      </g>
     </svg>
   );
 }

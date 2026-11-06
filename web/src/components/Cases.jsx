@@ -1,8 +1,8 @@
-// Two projects opened up in full. Each case arrives folded like a letter
-// and opens as it scrolls into view.
+// Two projects, kept short: a title, a line and a button. The button (or a
+// link to #case-<id>) unfolds the full case like a letter.
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { CASES } from "../data/work.js";
 
 // Locally, a missing photo shows a "Photograph to come" plate. In the
@@ -32,75 +32,110 @@ function Plate({ plate, n }) {
   );
 }
 
-function Case({ c }) {
+// The full case: a letter-folded sheet that opens as it appears.
+function CaseSheet({ c }) {
   return (
-    <article id={`case-${c.id}`} className={c.size === "spotlight" ? "case spotlight" : "case"}>
-      <header className="case-head">
-        <p className="kicker">
-          <span className="numeral">{c.numeral}</span> {c.size === "spotlight" ? "Spotlight" : "Case"}
-        </p>
-        <h3>{c.name}</h3>
-        <p className="case-subtitle">{c.subtitle}</p>
-      </header>
-
-      <motion.div
-        className="case-sheet"
-        initial={{ rotateX: -78, opacity: 0.2 }}
-        whileInView={{ rotateX: 0, opacity: 1 }}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <dl className="case-meta">
-          {c.meta.map(([k, v]) => (
-            <div key={k}>
-              <dt>{k}</dt>
-              <dd>{v}</dd>
-            </div>
-          ))}
-          {c.links?.map((l) => (
-            <div key={l.href}>
-              <dt>Link</dt>
-              <dd>
-                <a className="text-link" href={l.href}>
-                  {l.label}
-                </a>
-              </dd>
-            </div>
-          ))}
-        </dl>
-
-        <div className="case-body">
-          {c.sections.map((s) => (
-            <section key={s.heading}>
-              <h4>{s.heading}</h4>
-              <p>{s.body}</p>
-            </section>
-          ))}
-          {c.quote && <blockquote>{c.quote}</blockquote>}
-          {c.figure && (
-            <p className="case-figure">
-              <span className="from">{c.figure.from}</span>
-              <span className="arrow" aria-hidden="true">
-                →
-              </span>
-              <span className="to">{c.figure.to}</span>
-            </p>
-          )}
-          {c.reflection && (
-            <aside className="reflection">
-              <h4>What it meant for me</h4>
-              <p className="reflection-lead">{c.reflection.lead}</p>
-              {c.reflection.credit && <p className="reflection-credit">{c.reflection.credit}</p>}
-              <p>{c.reflection.body}</p>
-            </aside>
-          )}
-          <div className="plates">
-            {c.plates.map((p, i) => (
-              <Plate key={p.src} plate={p} n={i + 1} />
-            ))}
+    <motion.div
+      className="case-sheet"
+      initial={{ rotateX: -40 }}
+      animate={{ rotateX: 0 }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <dl className="case-meta">
+        {c.meta.map(([k, v]) => (
+          <div key={k}>
+            <dt>{k}</dt>
+            <dd>{v}</dd>
           </div>
+        ))}
+        {c.links?.map((l) => (
+          <div key={l.href}>
+            <dt>Link</dt>
+            <dd>
+              <a className="text-link" href={l.href}>
+                {l.label}
+              </a>
+            </dd>
+          </div>
+        ))}
+      </dl>
+
+      <div className="case-body">
+        {c.sections.map((s) => (
+          <section key={s.heading}>
+            <h4>{s.heading}</h4>
+            <p>{s.body}</p>
+          </section>
+        ))}
+        {c.quote && <blockquote>{c.quote}</blockquote>}
+        {c.figure && (
+          <p className="case-figure">
+            <span className="from">{c.figure.from}</span>
+            <span className="arrow" aria-hidden="true">
+              →
+            </span>
+            <span className="to">{c.figure.to}</span>
+          </p>
+        )}
+        {c.reflection && (
+          <aside className="reflection">
+            <h4>What it meant for me</h4>
+            <p className="reflection-lead">{c.reflection.lead}</p>
+            {c.reflection.credit && <p className="reflection-credit">{c.reflection.credit}</p>}
+            <p>{c.reflection.body}</p>
+          </aside>
+        )}
+        <div className="plates">
+          {c.plates.map((p, i) => (
+            <Plate key={p.src} plate={p} n={i + 1} />
+          ))}
         </div>
-      </motion.div>
+      </div>
+    </motion.div>
+  );
+}
+
+function Case({ c }) {
+  const [open, setOpen] = useState(false);
+  const id = `case-${c.id}`;
+  useEffect(() => {
+    const check = () => location.hash === `#${id}` && setOpen(true);
+    check();
+    addEventListener("hashchange", check);
+    return () => removeEventListener("hashchange", check);
+  }, [id]);
+  const spotlight = c.size === "spotlight";
+
+  return (
+    <article id={id} className={spotlight ? "case spotlight" : "case"}>
+      <div className="case-row">
+        <header className="case-head">
+          <p className="kicker">
+            <span className="numeral">{c.numeral}</span> {spotlight ? "Spotlight" : "Case"}
+          </p>
+          <h3>{c.name}</h3>
+          <p className="case-subtitle">{c.subtitle}</p>
+        </header>
+        <button className="case-toggle" aria-expanded={open} aria-controls={`${id}-body`} onClick={() => setOpen(!open)}>
+          {open ? "Fold it back up" : spotlight ? "Read the spotlight" : "Read the case"}
+          <span aria-hidden="true">{open ? "↑" : "↓"}</span>
+        </button>
+      </div>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            id={`${id}-body`}
+            className="case-fold"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <CaseSheet c={c} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </article>
   );
 }
@@ -111,7 +146,7 @@ export default function Cases() {
       <div className="wrap">
         <div className="section-head">
           <h2>In depth.</h2>
-          <p>One full case and one spotlight: what I built, what I found, and what it meant for me.</p>
+          <p>Two projects, opened up: what I built, what I found, and what it meant for me.</p>
         </div>
         {CASES.map((c) => (
           <Case key={c.id} c={c} />

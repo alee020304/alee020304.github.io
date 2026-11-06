@@ -5,6 +5,7 @@ import Cases from "./components/Cases.jsx";
 import Range from "./components/Range.jsx";
 import Recognition from "./components/Recognition.jsx";
 import Contact from "./components/Contact.jsx";
+import CornerPile from "./components/CornerPile.jsx";
 import { PaperDefs } from "./paper.jsx";
 
 export default function App() {
@@ -13,12 +14,13 @@ export default function App() {
       <div id="top">
         <PaperDefs />
         <Header />
+        <CornerPile />
         <main>
           <Forms />
           <Cases />
-          <Range />
           <Recognition />
           <Contact />
+          <Range />
         </main>
         <footer className="wrap">© 2026 Ahreum Lee</footer>
       </div>

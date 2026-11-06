@@ -1,9 +1,9 @@
 // The crane, folded the way you'd fold one by hand. A small flat-folding
 // simulator: the paper is a stack of convex layers; each step cuts layers
 // along a crease and swings the pieces on one side over it (or turns them,
-// for the squash). Steps follow the usual diagrams: turn the square, fold
-// in half twice, squash to a square base, kite folds, petal fold front and
-// back (bird base), narrow the legs, reverse-fold neck and tail, and the head.
+// for the squash). Steps follow the usual diagrams, quickly through the
+// early ones: turn the square, fold in half twice, squash to a square base,
+// petal fold (bird base), narrow the legs, reverse-fold neck and tail, head.
 
 const DEG = Math.PI / 180;
 const K = 50 * Math.SQRT2; // half the square's diagonal
@@ -128,47 +128,38 @@ const back = is("B");
 // Each step: optional cuts before it (instant, invisible), the moves, and
 // how long it takes relative to the others.
 const STEPS = [
-  { w: 0.5, ops: [spin(C, 45, () => true)] },
+  { w: 0.3, ops: [spin(C, 45, () => true)] },
   // Fold in half, top corner down to the bottom.
-  { w: 1, cut: [cutBy([L, R])], ops: [fold([L, R], onSide([L, R], [50, 0]))] },
+  { w: 0.6, cut: [cutBy([L, R])], ops: [fold([L, R], onSide([L, R], [50, 0]))] },
   // In half again, right corner onto the left. Front layers become "F".
   {
-    w: 1,
+    w: 0.6,
     cut: [cutBy([C, B]), (ls) => ls.map((l) => ({ ...l, tag: "B" }))],
     ops: [fold([C, B], onSide([C, B], R), { tag: "F" })]
   },
-  // Squash the front flap into a square, then the back one.
-  { w: 1.1, cut: [cutBy([C, M], front)], ops: [spin(C, -90, both(front, onSide([C, M], L)))] },
-  { w: 0.8, cut: [cutBy([C, M], back)], ops: [spin(C, -90, both(back, onSide([C, M], L)))] },
-  // Kite folds: lower edges of the front layer to the centre line.
+  // Squash both flaps into a square base.
   {
-    w: 1,
-    cut: [cutBy([B, P], front), cutBy([B, P2], front), cutBy(HINGE, front)],
-    ops: [fold([B, P], both(front, onSide([B, P], M))), fold([B, P2], both(front, onSide([B, P2], M2)))]
+    w: 0.7,
+    cut: [cutBy([C, M])],
+    ops: [spin(C, -90, both(front, onSide([C, M], L))), spin(C, -90, both(back, onSide([C, M], L)))]
   },
-  { w: 0.6, undo: true },
-  // Petal fold: lift the bottom point, the sides fold in along the creases.
+  // Petal fold, front and back (the kite creases are skipped): the bottom
+  // point lifts and the sides fold in. Now a bird base.
   {
-    w: 1.4,
+    w: 1.2,
+    cut: [cutBy([B, P]), cutBy([B, P2]), cutBy(HINGE)],
     ops: [
       fold([B, P], both(front, onSide([B, P], M))),
       fold([B, P2], both(front, onSide([B, P2], M2))),
-      fold(HINGE, both(front, (l) => sideOf(HINGE, centroid(l.pts)) === sideOf(HINGE, B)))
-    ]
-  },
-  // The same on the back: now a bird base.
-  {
-    w: 0.8,
-    cut: [cutBy([B, P], back), cutBy([B, P2], back), cutBy(HINGE, back)],
-    ops: [
+      fold(HINGE, both(front, onSide(HINGE, B))),
       fold([B, P], both(back, onSide([B, P], M)), { place: "bottom" }),
       fold([B, P2], both(back, onSide([B, P2], M2)), { place: "bottom" }),
-      fold(HINGE, both(back, (l) => sideOf(HINGE, centroid(l.pts)) === sideOf(HINGE, B)), { place: "bottom" })
+      fold(HINGE, both(back, onSide(HINGE, B)), { place: "bottom" })
     ]
   },
   // Narrow the legs, front and back.
   {
-    w: 1,
+    w: 0.7,
     cut: [cutBy(NARROW), cutBy(NARROW2)],
     ops: [
       fold(NARROW, both(front, onSide(NARROW, P))),
@@ -179,7 +170,7 @@ const STEPS = [
   },
   // Reverse-fold one leg up into the neck, the other into the tail.
   {
-    w: 1.2,
+    w: 1.1,
     cut: [cutBy(NECK, front), cutBy(TAIL, back)],
     ops: [
       fold(NECK, both(front, onSide(NECK, B)), { tag: "neck" }),
@@ -187,7 +178,7 @@ const STEPS = [
     ]
   },
   // The head.
-  { w: 0.7, cut: [cutBy(HEAD, is("neck"))], ops: [fold(HEAD, both(is("neck"), onSide(HEAD, NECK_TIP)), { tag: "head" })] }
+  { w: 0.6, cut: [cutBy(HEAD, is("neck"))], ops: [fold(HEAD, both(is("neck"), onSide(HEAD, NECK_TIP)), { tag: "head" })] }
 ];
 
 // Precompute the stack before each step (after its cuts) and after it.
@@ -196,12 +187,6 @@ const BEFORE = [];
 {
   let layers = SQUARE;
   STEPS.forEach((step, i) => {
-    if (step.undo) {
-      BEFORE.push(BEFORE[i - 1]);
-      step.ops = STEPS[i - 1].ops;
-      layers = BEFORE[i - 1];
-      return;
-    }
     layers = (step.cut || []).reduce((ls, c) => c(ls), layers);
     BEFORE.push(layers);
     layers = applyOps(layers, step.ops, 1);
@@ -219,7 +204,6 @@ export function craneAt(v) {
   while (i < STEPS.length - 1 && at > STEPS[i].w) at -= STEPS[i++].w;
   // Each step moves over its first 80% and rests for the remainder.
   let t = smooth(Math.min(1, at / (STEPS[i].w * 0.8)));
-  if (STEPS[i].undo) t = 1 - t;
   const layers = v <= 0 ? SQUARE.map((l) => ({ ...l, shade: 0 })) : applyOps(BEFORE[i], STEPS[i].ops, t);
 
   let [x0, y0, x1, y1] = [Infinity, Infinity, -Infinity, -Infinity];

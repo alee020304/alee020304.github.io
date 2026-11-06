@@ -8,8 +8,8 @@ export default function Header() {
         <nav>
           <a href="#forms">Work</a>
           <a href="#cases">Cases</a>
-          <a href="#range">Range</a>
           <a href="#contact">Contact</a>
+          <a href="#range">Range</a>
         </nav>
       </div>
     </header>

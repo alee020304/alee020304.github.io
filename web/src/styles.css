@@ -432,20 +432,50 @@ h3 {
 
 .case {
   perspective: 1800px;
-  margin-bottom: 120px;
+  border-bottom: 1px solid var(--rule);
 }
 
-.case:last-child {
-  margin-bottom: 0;
-}
-
-.case-head {
-  margin-bottom: 28px;
+.case-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px 32px;
+  padding-block: 32px;
 }
 
 .case-head h3 {
-  font-size: clamp(2.8rem, 6vw, 5rem);
+  font-size: clamp(2.2rem, 4.6vw, 3.4rem);
   line-height: 0.95;
+}
+
+.case-toggle {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--ink);
+  padding: 11px 20px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.case-toggle:hover,
+.case-toggle:focus-visible {
+  background: var(--ink);
+  color: var(--cotton);
+}
+
+.case-fold {
+  overflow: hidden;
+}
+
+.case-fold .case-sheet {
+  margin-bottom: 40px;
 }
 
 .case-subtitle {
@@ -1149,4 +1179,54 @@ footer {
 .hf-out .hw {
   background: #e2a94e;
   outline: 0.4cqw solid rgba(59, 47, 34, 0.55);
+}
+
+/* The pile, kept in the corner for the rest of the page. */
+.corner-pile {
+  position: fixed;
+  left: -34px;
+  bottom: calc(-46px - env(safe-area-inset-bottom, 0px));
+  width: 150px;
+  height: 150px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.corner-sheet {
+  position: absolute;
+  inset: 0;
+  width: 120px;
+  height: 120px;
+  filter: drop-shadow(0 6px 10px rgba(40, 28, 16, 0.18));
+}
+
+main,
+footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* The graph sits on that graph-paper sheet. */
+.range {
+  overflow-x: clip;
+}
+
+.range-sheet {
+  padding-block: 56px;
+  background: var(--grain), #f5f3ea;
+  box-shadow:
+    0 2px 4px rgba(40, 28, 16, 0.06),
+    0 30px 60px -36px rgba(40, 28, 16, 0.5);
+}
+
+@media (max-width: 860px) {
+  .corner-pile {
+    left: -26px;
+    bottom: calc(-34px - env(safe-area-inset-bottom, 0px));
+  }
+
+  .corner-sheet {
+    width: 84px;
+    height: 84px;
+  }
 }
