@@ -183,7 +183,7 @@ export const RANGE = [
     kind: "work",
     x: 7.9,
     y: 5.7,
-    meta: "AI Analyst Intern, PATRY Group · 2026",
+    meta: "Software Engineering Intern, PATRY Group · 2026",
     body:
       "I built a Property Inbox and Landlord and Tenant Board tracker that accounts receivable, property management and paralegal staff use. Now I'm building a tenant maintenance bot. React on Vercel, PostgreSQL and auth on Azure."
   },

@@ -4,6 +4,7 @@
 
 import { motion, useTransform } from "framer-motion";
 import EarthCut from "./EarthCut.jsx";
+import { craneAt, MAX_LAYERS } from "./crane.js";
 
 const VIEW = "-8 -8 116 116";
 const smooth = (x) => x * x * (3 - 2 * x);
@@ -12,57 +13,35 @@ const ramp = (v, a, b) => smooth(clamp((v - a) / (b - a)));
 const lerp = (a, b, t) => a + (b - a) * t;
 const fmt = (pts) => pts.map(([x, y]) => `${x.toFixed(2)},${y.toFixed(2)}`).join(" ");
 
-/* I. Crane: folded. Square → diamond (the folded base) → crane. */
+/* I. Crane: folded step by step, following the usual diagrams (see crane.js). */
 
-const RED = { sheet: "#c24e33", light: "#d4593b", mid: "#b5452c", dark: "#8c3020", deep: "#74281b" };
+const RED = { front: [194, 78, 51], back: [156, 54, 34], dark: [92, 30, 18] };
+const mix = (a, b, t) => `rgb(${a.map((x, i) => Math.round(x + (b[i] - x) * t)).join(",")})`;
 
-// The crane's facets, drawn back to front, in 400×300 drawing units.
-const CRANE = [
-  [[186, 168], [206, 168], [288, 34], "dark"],
-  [[206, 168], [222, 168], [288, 34], "deep"],
-  [[220, 172], [210, 190], [326, 92], "mid"],
-  [[220, 172], [230, 174], [326, 92], "light"],
-  [[180, 172], [192, 190], [78, 96], "mid"],
-  [[180, 172], [170, 174], [78, 96], "light"],
-  [[78, 96], [60, 117], [88, 105], "dark"],
-  [[78, 96], [88, 105], [92, 100], "mid"],
-  [[172, 174], [200, 160], [200, 206], "light"],
-  [[200, 160], [228, 174], [200, 206], "mid"],
-  [[176, 170], [204, 170], [128, 20], "light"],
-  [[204, 170], [228, 170], [128, 20], "mid"]
-].map(([a, b, c, tone]) => ({
-  end: [a, b, c].map(([x, y]) => [(x - 48) * 0.3 + 7, (y - 20) * 0.3 + 22]),
-  tone
-}));
+let last = { v: NaN, layers: [] };
+const layersAt = (v) => (v === last.v ? last.layers : (last = { v, layers: craneAt(v) }).layers);
 
-// The flat sheet, cut into a fan of twelve triangles around its centre.
-const RIM = [[0, 0], [33, 0], [67, 0], [100, 0], [100, 33], [100, 67], [100, 100], [67, 100], [33, 100], [0, 100], [0, 67], [0, 33]];
-const FAN = RIM.map((p, i) => [[50, 50], p, RIM[(i + 1) % RIM.length]]);
-// The folded base: the same sheet, half size and turned 45°.
-const toBase = ([x, y]) => {
-  const dx = (x - 50) * 0.5;
-  const dy = (y - 50) * 0.5;
-  return [50 + dx * Math.SQRT1_2 - dy * Math.SQRT1_2, 50 + dx * Math.SQRT1_2 + dy * Math.SQRT1_2];
-};
-
-function Facet({ i, shape }) {
-  const start = FAN[i];
-  const mid = start.map(toBase);
-  const end = CRANE[i].end;
+function Layer({ i, shape }) {
   const points = useTransform(shape, (v) => {
-    const [a, b, t] = v < 0.5 ? [start, mid, smooth(v / 0.5)] : [mid, end, smooth((v - 0.5) / 0.5)];
-    return fmt(a.map((p, k) => [lerp(p[0], b[k][0], t), lerp(p[1], b[k][1], t)]));
+    const l = layersAt(v)[i];
+    return l ? fmt(l.pts) : "0,0 0,0 0,0";
   });
-  const fill = useTransform(shape, [0, 0.5, 1], [RED.sheet, i % 2 ? RED.mid : RED.light, RED[CRANE[i].tone]]);
-  return <motion.polygon points={points} fill={fill} />;
+  const fill = useTransform(shape, (v) => {
+    const l = layersAt(v)[i];
+    return l ? mix(l.face > 0 ? RED.front : RED.back, RED.dark, l.shade * 0.45) : "none";
+  });
+  const opacity = useTransform(shape, (v) => (layersAt(v)[i] ? 1 : 0));
+  // Fold edges show once the paper is folded; the flat sheet has none.
+  const strokeOpacity = useTransform(shape, [0, 0.03], [0, 1]);
+  return <motion.polygon points={points} fill={fill} style={{ opacity, strokeOpacity }} />;
 }
 
 export function CraneSheet({ shape }) {
   return (
-    <svg viewBox={VIEW} className="sheet-art" role="img" aria-label="A sheet of red paper folding into a crane">
-      <g filter="url(#grain)">
-        {CRANE.map((_, i) => (
-          <Facet key={i} i={i} shape={shape} />
+    <svg viewBox={VIEW} className="sheet-art" role="img" aria-label="A sheet of red paper folded step by step into a crane">
+      <g filter="url(#grain)" stroke="#7a2a1a" strokeWidth="0.35" strokeLinejoin="round">
+        {Array.from({ length: MAX_LAYERS }, (_, i) => (
+          <Layer key={i} i={i} shape={shape} />
         ))}
       </g>
     </svg>
@@ -110,58 +89,79 @@ export function EarthSheet({ shape }) {
   );
 }
 
-/* III. House: folded. Top corners fold behind, a roof goes on, windows are cut. */
+/* III. House: a paper-house net is cut from the sheet, the offcut drops away,
+   the walls fold up and the roof folds in. Real CSS 3D; sizes are in cqw,
+   hundredths of the sheet. The paper's inner side is plain kraft; the outer
+   side is printed with the roof, door and windows. */
 
-const KRAFT = "#c4a173";
-const KRAFT_BACK = "#a8824f";
+// The net's outline, in sheet units: floor 38–62, walls 20 high, gables 10,
+// roof panels 16 wide with a little overhang.
+const NET =
+  "M50,8 L62,18 L62,38 L82,38 L82,36 L98,36 L98,64 L82,64 L82,62 L62,62 L62,82 L50,92 L38,82 L38,62 L18,62 L18,64 L2,64 L2,36 L18,36 L18,38 L38,38 L38,18 Z";
+const GABLE_DOWN = "polygon(0 0, 100% 0, 100% 66.67%, 50% 100%, 0 66.67%)";
+const GABLE_UP = "polygon(50% 0, 100% 33.33%, 100% 100%, 0 100%, 0 33.33%)";
 
-function Flap({ shape, corner, edge }) {
-  // `corner` folds across the line through the two `edge` points.
-  const [p, q] = edge;
-  const mirror = [p[0] + q[0] - corner[0], p[1] + q[1] - corner[1]];
-  const points = useTransform(shape, (v) => {
-    const t = ramp(v, 0, 0.4);
-    return fmt([p, q, [lerp(corner[0], mirror[0], t), lerp(corner[1], mirror[1], t)]]);
-  });
-  // Visible while it swings up to edge-on; after that it's behind the sheet.
-  const opacity = useTransform(shape, [0.18, 0.21], [1, 0]);
-  const fill = useTransform(shape, [0, 0.2], [KRAFT, KRAFT_BACK]);
-  return <motion.polygon points={points} fill={fill} style={{ opacity }} />;
+function Face({ box, origin, transform, out, clip, children, art }) {
+  const [left, top, width, height] = box.map((n) => `${n}cqw`);
+  return (
+    <motion.div className="hf" style={{ left, top, width, height, transformOrigin: origin, transform }}>
+      <div className="hf-in" style={{ clipPath: clip }} />
+      <div className="hf-out" style={{ clipPath: clip, backgroundColor: out }}>
+        {art}
+      </div>
+      {children}
+    </motion.div>
+  );
 }
 
 export function HouseSheet({ shape }) {
-  const roofOpacity = useTransform(shape, [0.42, 0.58], [0, 1]);
-  const roofY = useTransform(shape, (v) => (1 - ramp(v, 0.42, 0.62)) * -14);
-  const lines = useTransform(shape, (v) => ramp(v, 0.6, 0.82));
-  const holes = useTransform(shape, [0.8, 0.95], [0, 1]);
-  const windows = [
-    [16, 52, 22, 18],
-    [62, 52, 22, 18]
-  ];
+  const cut = useTransform(shape, (v) => ramp(v, 0.02, 0.24));
+  const cutOpacity = useTransform(shape, [0.28, 0.38], [1, 0]);
+  const offOpacity = useTransform(shape, [0.24, 0.38], [1, 0]);
+  const offY = useTransform(shape, (v) => `${ramp(v, 0.24, 0.4) * 6}cqw`);
+  const wall = (v) => ramp(v, 0.34, 0.66) * 90;
+  const roof = (v) => ramp(v, 0.6, 0.8) * 50;
+  const rx = (sign) => useTransform(shape, (v) => `rotateX(${sign * wall(v)}deg)`);
+  const ry = (sign, f = wall) => useTransform(shape, (v) => `rotateY(${sign * f(v)}deg)`);
+  const board = useTransform(shape, (v) => {
+    const t = ramp(v, 0.3, 0.88);
+    return `translateY(${t * 12}cqw) scale(${1 + ramp(v, 0.4, 0.9) * 0.9}) rotateX(${t * 56}deg) rotateZ(${t * -34}deg)`;
+  });
+  const pane = (x, y, w, h) => <i className="hw" style={{ left: `${x}%`, top: `${y}%`, width: `${w}%`, height: `${h}%` }} />;
+
   return (
-    <svg viewBox={VIEW} className="sheet-art" role="img" aria-label="A kraft sheet folding into a house">
-      <g filter="url(#grain)">
-        <polygon points="0,100 0,40 40,0 60,0 100,40 100,100" fill={KRAFT} />
-        <Flap shape={shape} corner={[0, 0]} edge={[[0, 40], [40, 0]]} />
-        <Flap shape={shape} corner={[100, 0]} edge={[[60, 0], [100, 40]]} />
-        <motion.polygon
-          points="-7,44 40,-4 60,-4 107,44 100,50 58,8 42,8 0,50"
-          fill="#b5452c"
-          style={{ opacity: roofOpacity, y: roofY }}
-        />
-        <motion.g style={{ opacity: holes }}>
-          {windows.map(([x, y, w, h]) => (
-            <rect key={x} x={x} y={y} width={w} height={h} fill="#e2a94e" />
-          ))}
-          <rect x="40" y="66" width="20" height="34" fill="#26344f" />
-        </motion.g>
-      </g>
-      <g fill="none" stroke="#3b2f22" strokeWidth="0.5">
-        {[...windows, [40, 66, 20, 34]].map(([x, y, w, h]) => (
-          <motion.path key={x} d={`M${x},${y} h${w} v${h} h${-w} Z`} style={{ pathLength: lines, opacity: lines }} />
-        ))}
-      </g>
-    </svg>
+    <div className="house-sq" role="img" aria-label="A kraft sheet cut and folded into a paper house">
+      <motion.div className="house-board" style={{ transform: board }}>
+        <motion.div className="house-offcut" style={{ opacity: offOpacity, y: offY }} />
+        <Face box={[38, 38, 24, 24]} out="#c4a173">
+          {/* Front wall: the hinge is the ground, the gable becomes the top. */}
+          <Face
+            box={[0, 24, 24, 30]}
+            origin="top"
+            transform={rx(1)}
+            clip={GABLE_DOWN}
+            out="#d9bb8b"
+            art={
+              <>
+                <i className="hd" />
+                {pane(10, 22, 18, 20)}
+                {pane(72, 22, 18, 20)}
+              </>
+            }
+          />
+          <Face box={[0, -30, 24, 30]} origin="bottom" transform={rx(-1)} clip={GABLE_UP} out="#b8925f" />
+          <Face box={[-20, 0, 20, 24]} origin="right" transform={ry(1)} out="#a8824f" art={pane(30, 30, 34, 40)}>
+            <Face box={[-16, -2, 16, 28]} origin="right" transform={ry(1, roof)} out="#9a3a24" />
+          </Face>
+          <Face box={[24, 0, 20, 24]} origin="left" transform={ry(-1)} out="#bf9763" art={pane(36, 30, 34, 40)}>
+            <Face box={[20, -2, 16, 28]} origin="left" transform={ry(-1, roof)} out="#b5452c" />
+          </Face>
+        </Face>
+        <motion.svg viewBox="0 0 100 100" className="house-cuts" style={{ opacity: cutOpacity }}>
+          <motion.path d={NET} fill="none" stroke="#3b2f22" strokeWidth="0.45" style={{ pathLength: cut }} />
+        </motion.svg>
+      </motion.div>
+    </div>
   );
 }
 

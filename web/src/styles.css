@@ -1081,3 +1081,72 @@ footer {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* The 3D paper house. The square matches the other sheets' 100-unit square
+   inside their -8…108 viewBox. */
+.house-sq {
+  position: absolute;
+  left: 6.9%;
+  top: 6.9%;
+  width: 86.2%;
+  height: 86.2%;
+  container-type: inline-size;
+  perspective: 260cqw;
+}
+
+.house-board,
+.house-board .hf {
+  position: absolute;
+  transform-style: preserve-3d;
+}
+
+.house-board {
+  inset: 0;
+}
+
+.house-offcut,
+.hf-in,
+.hf-out {
+  position: absolute;
+  inset: 0;
+  background: var(--grain), var(--kraft);
+  backface-visibility: hidden;
+}
+
+.hf-in,
+.hf-out {
+  transform: translateZ(0.05cqw);
+}
+
+.hf-out {
+  transform: rotateY(180deg) translateZ(0.05cqw);
+  background-blend-mode: multiply;
+}
+
+.house-cuts {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform: translateZ(0.2cqw);
+}
+
+/* Door and windows printed on the outside. The door stands on the hinge. */
+.hf-out .hd,
+.hf-out .hw {
+  position: absolute;
+}
+
+.hf-out .hd {
+  left: 39%;
+  top: 0;
+  width: 22%;
+  height: 38%;
+  background: var(--indigo);
+}
+
+.hf-out .hw {
+  background: #e2a94e;
+  outline: 0.4cqw solid rgba(59, 47, 34, 0.55);
+}

@@ -16,6 +16,8 @@ const SECTION_LEN = 1.4;
 const TOTAL = INTRO_LEN + SKILLS.length * SECTION_LEN;
 const ARRIVE = 0.14; // share of a section spent lifting the sheet into place
 const SHAPE = [0.06, 0.36]; // share of a section spent folding or cutting
+// The crane has twelve real folds, so it folds across most of its section.
+const SHAPE_FOR = { crane: [0.04, 0.78] };
 const LEAVE = 0.12; // share of the next section spent moving the old object out
 
 const smooth = (x) => x * x * (3 - 2 * x);
@@ -80,7 +82,10 @@ function sheetState(v, entry, L) {
 
   const t = (u - INTRO_LEN - entry.section * SECTION_LEN) / SECTION_LEN;
   const arrive = smooth(clamp(t / ARRIVE));
-  const shape = smooth(clamp((t - SHAPE[0]) / (SHAPE[1] - SHAPE[0])));
+  // The crane eases each of its own steps, so it takes progress unsmoothed.
+  const own = SHAPE_FOR[SKILLS[entry.section].sheet];
+  const [s0, s1] = own || SHAPE;
+  const shape = (own ? (x) => x : smooth)(clamp((t - s0) / (s1 - s0)));
   const last = entry.section === SKILLS.length - 1;
   const leave = last ? 0 : smooth(clamp((t - 1) / LEAVE));
   return {
