@@ -737,13 +737,42 @@ h3 {
 .graph-plot {
   position: relative;
   aspect-ratio: 1.6;
-  border-left: 1.5px solid var(--ink);
-  border-bottom: 1.5px solid var(--ink);
   background:
     linear-gradient(rgba(60, 100, 130, 0.22) 1px, transparent 1px) 0 0 / 100% 10%,
     linear-gradient(90deg, rgba(60, 100, 130, 0.22) 1px, transparent 1px) 0 0 / 10% 100%,
     linear-gradient(rgba(60, 100, 130, 0.08) 1px, transparent 1px) 0 0 / 100% 2%,
     linear-gradient(90deg, rgba(60, 100, 130, 0.08) 1px, transparent 1px) 0 0 / 2% 100%;
+}
+
+/* The axes, drawn in when the graph comes into view: up, then across. */
+.axis-line {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: var(--ink);
+}
+
+.axis-line-y {
+  width: 1.5px;
+  height: 100%;
+  transform-origin: bottom;
+}
+
+.axis-line-x {
+  height: 1.5px;
+  width: 100%;
+  transform-origin: left;
+}
+
+.section-head .range-why {
+  max-width: 34rem;
+  margin-top: 14px;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+
+.range-why .now-tag {
+  margin-right: 6px;
 }
 
 .axis {

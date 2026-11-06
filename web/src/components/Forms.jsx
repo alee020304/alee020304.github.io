@@ -18,8 +18,8 @@ const SECTION_LEN = 1.6;
 const TOTAL = INTRO_LEN + SKILLS.length * SECTION_LEN;
 const ARRIVE = 0.1; // share of a section spent lifting the sheet into place
 const SHAPE = [0.04, 0.32]; // share of a section spent folding or cutting
-// The crane has more steps, so it gets a little longer.
-const SHAPE_FOR = { crane: [0.03, 0.36] };
+// The crane rushes its early folds, so it finishes no later than the rest.
+const SHAPE_FOR = { crane: [0.03, 0.26] };
 const LEAVE = 0.1; // share of the next section spent moving the old object out
 
 const narrow = (L) => L.w < 860;
@@ -153,10 +153,21 @@ export default function Forms() {
   const L = layout(useViewport());
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const glide = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.0002 });
+  // `active` is the section in view (for the swatches). Its text waits until
+  // the object on screen has finished forming, and goes as it leaves.
   const [active, setActive] = useState(-1);
+  const [shown, setShown] = useState(-1);
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     const u = v * TOTAL - INTRO_LEN + 0.06;
     setActive(u < 0 ? -1 : Math.min(SKILLS.length - 1, Math.floor(u / SECTION_LEN)));
+  });
+  useMotionValueEvent(glide, "change", (v) => {
+    const u = v * TOTAL - INTRO_LEN;
+    const i = Math.floor(u / SECTION_LEN);
+    const t = u / SECTION_LEN - i;
+    const [, done] = SHAPE_FOR[SKILLS[i]?.sheet] || SHAPE;
+    const ok = i >= 0 && i < SKILLS.length && t >= done && (t < 0.97 || i === SKILLS.length - 1);
+    setShown(ok ? i : -1);
   });
 
   function goTo(i) {
@@ -165,7 +176,7 @@ export default function Forms() {
     scrollTo({ top: el.offsetTop + (u / TOTAL) * (el.offsetHeight - innerHeight), behavior: "smooth" });
   }
 
-  const skill = SKILLS[active];
+  const skill = SKILLS[shown];
 
   return (
     <section id="forms" ref={ref} className="forms" style={{ height: `${TOTAL * 100}svh` }}>
@@ -185,7 +196,7 @@ export default function Forms() {
                 key={skill.id}
                 className="skill-text"
                 initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } }}
+                animate={{ opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }}
                 exit={{ opacity: 0, y: -16, transition: { duration: 0.18 } }}
               >
                 <p className="kicker">

@@ -128,25 +128,25 @@ const back = is("B");
 // Each step: optional cuts before it (instant, invisible), the moves, and
 // how long it takes relative to the others.
 const STEPS = [
-  { w: 0.15, ops: [spin(C, 45, () => true)] },
+  { w: 0.05, ops: [spin(C, 45, () => true)] },
   // Fold in half, top corner down to the bottom.
-  { w: 0.35, cut: [cutBy([L, R])], ops: [fold([L, R], onSide([L, R], [50, 0]))] },
+  { w: 0.12, cut: [cutBy([L, R])], ops: [fold([L, R], onSide([L, R], [50, 0]))] },
   // In half again, right corner onto the left. Front layers become "F".
   {
-    w: 0.35,
+    w: 0.12,
     cut: [cutBy([C, B]), (ls) => ls.map((l) => ({ ...l, tag: "B" }))],
     ops: [fold([C, B], onSide([C, B], R), { tag: "F" })]
   },
   // Squash both flaps into a square base.
   {
-    w: 0.4,
+    w: 0.22,
     cut: [cutBy([C, M])],
     ops: [spin(C, -90, both(front, onSide([C, M], L))), spin(C, -90, both(back, onSide([C, M], L)))]
   },
   // Petal fold, front and back (the kite creases are skipped): the bottom
   // point lifts and the sides fold in. Now a bird base.
   {
-    w: 0.8,
+    w: 0.5,
     cut: [cutBy([B, P]), cutBy([B, P2]), cutBy(HINGE)],
     ops: [
       fold([B, P], both(front, onSide([B, P], M))),
@@ -159,7 +159,7 @@ const STEPS = [
   },
   // Narrow the legs, front and back.
   {
-    w: 0.4,
+    w: 0.25,
     cut: [cutBy(NARROW), cutBy(NARROW2)],
     ops: [
       fold(NARROW, both(front, onSide(NARROW, P))),
@@ -170,7 +170,7 @@ const STEPS = [
   },
   // Reverse-fold one leg up into the neck, the other into the tail.
   {
-    w: 0.8,
+    w: 0.45,
     cut: [cutBy(NECK, front), cutBy(TAIL, back)],
     ops: [
       fold(NECK, both(front, onSide(NECK, B)), { tag: "neck" }),
@@ -178,7 +178,7 @@ const STEPS = [
     ]
   },
   // The head.
-  { w: 0.4, cut: [cutBy(HEAD, is("neck"))], ops: [fold(HEAD, both(is("neck"), onSide(HEAD, NECK_TIP)), { tag: "head" })] }
+  { w: 0.3, cut: [cutBy(HEAD, is("neck"))], ops: [fold(HEAD, both(is("neck"), onSide(HEAD, NECK_TIP)), { tag: "head" })] }
 ];
 
 // Precompute the stack before each step (after its cuts) and after it.
