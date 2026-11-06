@@ -2,8 +2,8 @@
 // on the top sheet. Scrolling zooms out and gathers the pile at the bottom
 // of the screen. Each section then lifts the next sheet up from the pile
 // (bottom up, like a new page) and folds or cuts it into an object, while
-// the previous object moves on up and out. Each object is made in the first
-// third of its section and holds, finished, for the rest. The paper follows
+// the previous object moves on up and out. Each sheet comes out first, then
+// turns quickly into its object, which holds, finished, for the rest. The paper follows
 // a spring on the scroll position, so it glides rather than jumping with
 // each wheel tick.
 
@@ -19,9 +19,9 @@ const TOTAL = INTRO_LEN + SKILLS.length * SECTION_LEN;
 // Share of the opening's scroll by which the pile has gathered.
 export const GATHERED = INTRO_LEN / TOTAL;
 const ARRIVE = 0.1; // share of a section spent lifting the sheet into place
-const SHAPE = [0.04, 0.32]; // share of a section spent folding or cutting
-// The crane rushes its early folds, so it finishes no later than the rest.
-const SHAPE_FOR = { crane: [0.03, 0.26] };
+// The sheet comes out of the pile first, then turns quickly into its object.
+const SHAPE = [0.1, 0.26]; // share of a section spent folding or cutting
+const SHAPE_FOR = { crane: [0.1, 0.26] }; // the crane eases each of its own steps
 const LEAVE = 0.1;
 const TEXT_AT = 0.6; // the text fades in once the object is this far formed // share of the next section spent moving the old object out
 
