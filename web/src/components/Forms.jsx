@@ -126,9 +126,11 @@ function HeroSheet({ progress, L }) {
   return (
     <div className="hero-place">
       <motion.div className="hero-sheet" style={{ y, rotate, opacity }}>
-        <p className="kicker">{INTRO.kicker}</p>
         <h1>{INTRO.name}</h1>
-        <p className="hero-role">{INTRO.role}</p>
+        <p className="hero-title">{INTRO.title}</p>
+        <p className="hero-now">
+          <span className="now-tag">Now</span> {INTRO.now}
+        </p>
         <p className="lede">{INTRO.summary}</p>
         <p className="scroll-cue">Scroll</p>
       </motion.div>

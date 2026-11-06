@@ -4,9 +4,9 @@
 // The opening: a pile of papers. The top sheet introduces me; each
 // section after it takes a sheet from the pile and folds or cuts it.
 export const INTRO = {
-  kicker: "Computer Science & AI · McGill University, 2026",
   name: "Ahreum Lee",
-  role: "AI Analyst Intern at PATRY Group, Kingston",
+  title: "Computer Science & Biotech new grad, McGill University",
+  now: "Software engineering intern at PATRY Group, Kingston",
   summary:
     "I build with AI, analyse data and lead teams. I like to meet the people I'm building for, I check the work before anyone relies on it, and I build things people keep using."
 };
