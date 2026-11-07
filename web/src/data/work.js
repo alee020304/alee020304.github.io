@@ -60,10 +60,65 @@ export const SKILLS = [
     points: [
       "VP Marketing, GDG on Campus McGill: 100K+ impressions in two months.",
       "Co-President, AKCSE: led a multidisciplinary executive team and secured $2,000 in extra funding.",
+      "Project Coordinator, Techwin Plant Canada: worked with senior project managers to keep 5+ engineering firms aligned on a $1B battery plant.",
       "Product manager for a team of four at McHacks 2026.",
       "Won the ACM CHI 2025 volunteer T-shirt competition, which got me to the conference in Yokohama."
     ],
     link: { label: "See everything on the graph", href: "#range" }
+  }
+];
+
+// Positions, newest first: how recruiters read a profile.
+export const EXPERIENCE = [
+  {
+    role: "Software Engineering Intern",
+    org: "PATRY Group",
+    place: "Kingston, ON",
+    when: "Sep 2026 – present",
+    body:
+      "I build AI-powered internal tools on Yardi data, scoped with Operations: a Property Inbox and Landlord and Tenant Board tracker now used by accounts receivable, property management and paralegal staff."
+  },
+  {
+    role: "Research Intern (SURE)",
+    org: "McGill University",
+    place: "Montreal, QC",
+    when: "May – Sep 2026",
+    body:
+      "I extended the open-source OpenQuake seismic risk engine in Python and set up our move to a government HPC cluster, where runs take about 30 hours instead of 96.",
+    link: { label: "More on OpenQuake", href: "#case-openquake" }
+  },
+  {
+    role: "Research Fellow (part-time)",
+    org: "Complex Collaboration Lab, McGill",
+    place: "Montreal, QC",
+    when: "Aug 2025 – May 2026",
+    body:
+      "I collected 2,100+ news articles on Canadian healthcare reform, modelled their topics with BERTopic and checked the trends against real events. The results became the structure of the lab's next study."
+  },
+  {
+    role: "Research Assistant",
+    org: "Shared Reality Lab, McGill",
+    place: "Montreal, QC",
+    when: "Aug 2025 – Jan 2026",
+    body:
+      "I built an LLM-as-a-judge evaluation for ADiNA, an AI nurse for seniors, and visited a care home three times to meet the residents and caregivers it was for.",
+    link: { label: "More on ADiNA", href: "#case-adina" }
+  },
+  {
+    role: "Web Developer (NSERC USRA)",
+    org: "Reconstruct McGill",
+    place: "Montreal, QC",
+    when: "May 2025 – Jan 2026",
+    body:
+      "I built a multi-criteria tool for free building-retrofit assessments that the team kept extending, and a retrofit cost calculator (React, Django REST, AWS)."
+  },
+  {
+    role: "Project Coordinator",
+    org: "Techwin Plant Canada",
+    place: "Montreal, QC",
+    when: "Jan – Aug 2024",
+    body:
+      "Eight months on site with senior project managers, coordinating 5+ engineering firms on a $1B battery plant: BIM model reviews in Autodesk Construction Cloud, piping design, value engineering and certification. The team reused my coordination notes."
   }
 ];
 
@@ -271,8 +326,9 @@ export const RANGE = [
     kind: "work",
     x: 2.8,
     y: 2.1,
-    meta: "Project Coordinator, Techwin Plant Canada · 2024",
-    body: "I tracked 3D model clashes between engineering firms on a battery plant project. The team reused my coordination notes."
+    meta: "Project Coordinator, Techwin Plant Canada · Jan – Aug 2024",
+    body:
+      "Eight months on site with senior project managers, coordinating 5+ engineering firms on a $1B battery plant. I tracked 3D model clashes in Autodesk Construction Cloud, and the team reused my coordination notes."
   },
   {
     id: "akcse",

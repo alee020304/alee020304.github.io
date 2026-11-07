@@ -2,6 +2,7 @@ import { MotionConfig } from "framer-motion";
 import Header from "./components/Header.jsx";
 import Forms from "./components/Forms.jsx";
 import Cases from "./components/Cases.jsx";
+import Experience from "./components/Experience.jsx";
 import Range from "./components/Range.jsx";
 import Recognition from "./components/Recognition.jsx";
 import Contact from "./components/Contact.jsx";
@@ -17,6 +18,7 @@ export default function App() {
         <CornerPile />
         <main>
           <Forms />
+          <Experience />
           <Cases />
           <Recognition />
           <Contact />
