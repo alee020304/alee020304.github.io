@@ -20,9 +20,9 @@ export default function App() {
           <Forms />
           <Experience />
           <Cases />
+          <Range />
           <Recognition />
           <Contact />
-          <Range />
         </main>
         <footer className="wrap">© 2026 Ahreum Lee</footer>
       </div>
