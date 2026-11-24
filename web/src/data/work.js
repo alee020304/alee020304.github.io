@@ -8,7 +8,7 @@ export const INTRO = {
   title: "Computer Science & Biotech new grad, McGill University",
   now: "Software engineering intern at PATRY Group, Kingston",
   summary:
-    "I build with AI, analyse data and lead teams. I like to meet the people I'm building for, I check the work before anyone relies on it, and I build things people keep using."
+    "I studied computer science and AI at McGill, with a minor in biotechnology. During undergrad I worked on AI tools, research projects and student communities. This page is where I keep them."
 };
 
 export const SKILLS = [
@@ -17,11 +17,13 @@ export const SKILLS = [
     numeral: "I",
     sheet: "crane",
     heading: "Working with AI",
-    trait: "I check AI's work before anyone relies on it.",
+    trait:
+      "I worked on AI tools at PATRY Group and on an AI nurse for seniors during undergrad. Both taught me that AI is quick at a first version and needs checking on the details, including the model doing the checking.",
     points: [
       "Built AI-powered internal tools at PATRY Group, now used by accounts receivable, property management and paralegal staff.",
+      "Building a tenant maintenance bot on Claude Haiku that sorts requests, and checking it with an LLM judge against Claude Opus plus manual review of samples.",
       "Evaluated an AI nurse for seniors with an LLM-as-a-judge suite, and caught the judge making mistakes of its own.",
-      "Claude Certified Developer – Foundations (Anthropic, 2026). I prototype with Claude, Codex and Gumloop."
+      "Claude Certified Developer – Foundations (Anthropic, 2026), covering tool use and MCP. I prototype with Claude, Codex and Gumloop."
     ],
     link: { label: "More on ADiNA", href: "#case-adina" }
   },
@@ -30,7 +32,8 @@ export const SKILLS = [
     numeral: "II",
     sheet: "earth",
     heading: "Data analysis & research",
-    trait: "I go to the source before I trust a result.",
+    trait:
+      "I worked in three research labs during undergrad. They taught me to check a result against what actually happened, and to go and meet the people a system is for.",
     points: [
       "Collected 2,100+ news articles on Canadian healthcare reform, modelled their topics with BERTopic, and checked the trends against real events.",
       "Built geospatial data pipelines for seismic risk research, and set up the move to a government HPC cluster.",
@@ -43,10 +46,11 @@ export const SKILLS = [
     numeral: "III",
     sheet: "house",
     heading: "Building software",
-    trait: "I build things people keep using.",
+    trait:
+      "I built web tools for a property company, a retrofit research group and a seismic research team, each from what the people using it asked for.",
     points: [
-      "A Property Inbox and Landlord and Tenant Board tracker at PATRY: React on Vercel, PostgreSQL and auth on Azure, on Yardi data.",
-      "A retrofit assessment tool at Reconstruct McGill that the team kept extending (React, Django REST, AWS).",
+      "A Property Inbox at PATRY that brings maintenance requests from email, voicemail, the call exchange and Yardi into one place, and a tracker for Landlord and Tenant Board cases. React on Vercel, PostgreSQL and auth on Azure.",
+      "A retrofit assessment tool at Reconstruct McGill, taken as far as testing with industry stakeholders on real data, then handed to the next cohort (React, Django REST, AWS).",
       "Extensions to OpenQuake, an open-source seismic risk engine, in Python."
     ],
     link: { label: "See everything on the graph", href: "#range" }
@@ -56,7 +60,7 @@ export const SKILLS = [
     numeral: "IV",
     sheet: "dolls",
     heading: "Leadership",
-    trait: "I find a way in, then bring people with me.",
+    trait: "I ran marketing and co-led student groups at McGill, and coordinated engineering firms on a construction site before that.",
     points: [
       "VP Marketing, GDG on Campus McGill: 100K+ impressions in two months.",
       "Co-President, AKCSE: led a multidisciplinary executive team and secured $2,000 in extra funding.",
@@ -76,7 +80,7 @@ export const EXPERIENCE = [
     place: "Kingston, ON",
     when: "Sep 2026 – present",
     body:
-      "I build AI-powered internal tools on Yardi data, scoped with Operations: a Property Inbox and Landlord and Tenant Board tracker now used by accounts receivable, property management and paralegal staff."
+      "I build AI-powered internal tools on Yardi data, scoped with Operations. The Property Inbox brings maintenance requests from email, voicemail, the call exchange and Yardi into one place, and a tracker does the same for Landlord and Tenant Board cases. Accounts receivable, property management and paralegal staff use both. Now I'm building a tenant maintenance bot on Claude Haiku, checked with an LLM judge against Claude Opus and manual review."
   },
   {
     role: "Research Intern (SURE)",
@@ -110,7 +114,7 @@ export const EXPERIENCE = [
     place: "Montreal, QC",
     when: "May 2025 – Jan 2026",
     body:
-      "I built a multi-criteria tool for free building-retrofit assessments that the team kept extending, and a retrofit cost calculator (React, Django REST, AWS)."
+      "On a team of two, I built a multi-criteria tool for free building-retrofit assessments, took it as far as testing with industry stakeholders on real data, then handed it to the next cohort. I also built a retrofit cost calculator (React, Django REST, AWS)."
   },
   {
     role: "Project Coordinator",
@@ -157,7 +161,6 @@ export const CASES = [
           "Three visits to a care home, to meet caregivers and residents. Residents were uneasy when an assistant knew things they didn't remember telling it, so I proposed keeping conversation and clinical records in separate memories."
       }
     ],
-    quote: "The agent didn't need to be taught empathy. It needed to know when to use it.",
     reflection: {
       lead: "Pills, not vitamins.",
       credit: "A line I took from Ivan Zhao.",
@@ -229,7 +232,7 @@ export const RANGE = [
     y: 3.9,
     meta: "Web Developer, NSERC USRA · 2025–26",
     body:
-      "I built a multi-criteria tool for free building-retrofit assessments that the team kept extending, and a retrofit cost calculator (React, Django REST, AWS)."
+      "On a team of two, I built a multi-criteria tool for free building-retrofit assessments, tested it with industry stakeholders on real data and handed it to the next cohort. Also a retrofit cost calculator (React, Django REST, AWS)."
   },
   {
     id: "patry",
@@ -240,7 +243,7 @@ export const RANGE = [
     y: 5.7,
     meta: "Software Engineering Intern, PATRY Group · 2026",
     body:
-      "I built a Property Inbox and Landlord and Tenant Board tracker that accounts receivable, property management and paralegal staff use. Now I'm building a tenant maintenance bot. React on Vercel, PostgreSQL and auth on Azure."
+      "I built a Property Inbox that gathers maintenance requests from email, voicemail, the call exchange and Yardi, and a Landlord and Tenant Board case tracker. Three teams use them. Now I'm building a tenant maintenance bot on Claude Haiku, checked against Claude Opus with an LLM judge and manual review."
   },
   {
     id: "adina",
@@ -256,13 +259,14 @@ export const RANGE = [
   },
   {
     id: "dna",
-    label: "DNA data storage (COMP 561)",
-    short: "DNA storage",
+    label: "Music stored as DNA (COMP 561)",
+    short: "Music as DNA",
     kind: "project",
     x: 8.4,
     y: 6.9,
-    meta: "Computational Biology course project",
-    body: "I encoded digital data as DNA sequences and measured the error rates of encoding and decoding."
+    meta: "Computational Biology course project · team of 3 · Fall 2024",
+    body:
+      "We encoded classical piano MIDI files as DNA and found the notes again with a hidden Markov model and Viterbi decoding. My part was the model's state diagram and probability matrices. It recovered 60% of the encoded notes."
   },
   {
     id: "complex-collaboration",
@@ -286,6 +290,17 @@ export const RANGE = [
     body: "I compared Naive Bayes, SVM, random forest, MLP and BERT on news headline sentiment. BERT did best."
   },
   {
+    id: "spam",
+    label: "Spam classifier from scratch",
+    short: "Spam classifier",
+    kind: "project",
+    x: 6.4,
+    y: 0.7,
+    meta: "Applied Machine Learning coursework · Winter 2026",
+    body:
+      "Logistic regression with mini-batch SGD and L2 regularisation written in NumPy, tuned with 5-fold cross-validation. 86% test accuracy on Spambase from only 230 training emails."
+  },
+  {
     id: "building",
     label: "Address → building energy",
     short: "Building tool",
@@ -305,7 +320,8 @@ export const RANGE = [
     x: 4.5,
     y: 3.2,
     meta: "Chrome extension · 2023",
-    body: "I built a Chrome extension that filters YouTube by classifying video transcripts in real time (Naive Bayes, Flask).",
+    body:
+      "I built a Chrome extension that filters YouTube by classifying video transcripts in real time (Naive Bayes, Flask). It was right over 80% of the time on data we labelled by hand.",
     href: "https://github.com/TaewonHwang02/Akcse_project2024"
   },
   {

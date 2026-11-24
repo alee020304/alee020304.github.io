@@ -1,33 +1,49 @@
-# Portfolio — plan v3: paper
+# Portfolio — plan v4: minihompy
 
-Supersedes v2 (3D terrain + planet work map). Branch: `paper`.
+Supersedes v3 (paper). Branch: `paper`.
 
 ## Idea
 
-Recruiters want to know what kind of person this is, in plain words. The page opens
-zoomed in on a pile of papers with a plain intro on the top sheet. Scrolling gathers
-the pile, then each section lifts a sheet from it and folds or cuts it into an object:
+An open book in a window, in front of a pixel bakery-cafe, in the spirit of a 2000s
+minihompy. The window fills the screen and never scrolls; the two pages scroll
+on their own. The left page is the owner's column (visit counter, minimi,
+one-line intro, now/next, contact buttons). The right page is whichever tab is
+open. Index tabs sit on the right edge, below a balloon sticker. The home tab opens on a pixel
+miniroom. English only.
 
-| Section | Plain line | Sheet |
-| --- | --- | --- |
-| Working with AI | I check AI's work before anyone relies on it. | Red sheet folds into a crane |
-| Data analysis & research | I go to the source before I trust a result. | Blue sheet: circle cut out, becomes the earth |
-| Building software | I build things people keep using. | Kraft sheet folds into a house |
-| Leadership | I find a way in, then bring people with me. | Indigo sheet folded, cut, opened into paper people |
+| Tab | What it holds |
+| --- | --- |
+| Home | Miniroom, notice, new posts |
+| Profile | Facts, then the four traits with their evidence (`SKILLS`) |
+| Diary | Every position, newest first (`EXPERIENCE`) |
+| Board | The two case studies as posts (`CASES`); `#case-<id>` opens one |
+| Graph | The range graph (`RANGE`) |
+| Awards | `AWARDS` |
+| Guestbook | Contact |
 
-Sheets only ever rise from the pile (no closing). Transitions are short; each finished
-object holds for most of its section. Then: ADiNA case, OpenQuake spotlight, the range
-graph, recognition, contact.
+Old anchors still work: `#experience` → Diary, `#cases` → Board, `#range` → Graph,
+`#recognition` → Awards, `#contact` → Guestbook.
 
 ## Design
 
-- Paper palette: cotton `#f8f5ee`, page `#f2ede3`, ink `#1f1a16`, vermilion `#b5452c`,
-  indigo `#26344f`, kraft `#c4a173`, sage `#7f9670`.
-- Type: Instrument Serif (display), Newsreader (text), Hanken Grotesk (labels).
-- Textures are generated SVG noise (grain, washi fibres, kraft specks): no image files.
-- Three.js removed. Bundle went from about 1.1 MB to about 290 KB.
+- Two modes, switched from the title bar and remembered in the browser. Color:
+  frame `#f4f1ec`, title bar `#786f68`, panels `#ffffff`, rules `#c8c0b6`, ink
+  `#33302d`, labels `#5a524a`, one point colour `#b9625e` (the rug's dusty rose).
+  E-ink: the same page in light greys, like an e-reader, for resting the eyes (frame `#eaeaea`, panels `#f4f4f4`,
+  title bar `#6a6a6a`, ink `#2e2e2e`). Tokens live at the top of `styles.css`.
+- Type: two pixel faces. Pixelify Sans (Google Fonts) for titles, tabs and
+  buttons; Galmuri11 (OFL, bundled in `web/src/fonts`, cut to Latin) for
+  everything you read. Nothing else.
+- Dotted 1px rules, 1px solid frames, flat pixel buttons.
+- Pixel art is PNG in `web/src/art`, drawn by the scripts in
+  `ahreum-cyworld-design.zip`: the bakery background (640 × 400), the miniroom
+  (300 × 222, shown at 2×), the minimi (24 × 37), a balloon and two flower
+  stickers. Always scaled by whole numbers with `image-rendering: pixelated`;
+  the background alone is stretched to cover the screen, so the whole bakery shows.
+- Motion: a short sparkle trail behind the pointer, off under reduced motion.
+- The visit counter counts the viewer's own visits in their browser.
 
-## Photos to add (optional; plates show "Photograph to come" until then)
+## Photos to add (optional; plates show "Photograph to come" locally until then)
 
 4:3, at least 1200×900, JPG, under 500 KB. No resident data, no PATRY internals.
 
