@@ -19,5 +19,5 @@ export default function Miniroom() {
 
 export function Minimi({ className = "" }) {
   const mode = useMode();
-  return <img className={"px " + className} src={ART[mode].minimi} width="24" height="37" alt="" />;
+  return <img className={"px " + className} src={ART[mode].minimi} width="24" height="39" alt="" />;
 }

@@ -32,6 +32,8 @@
   --link: #4a4744;
   --link-hover: #000000;
   --point: #b9625e;
+  --walnut: #6b4a3a;
+  --walnut-ink: #f4f1ec;
   --badge: #b9625e;
   --tab-bg: #ece8e1;
   --tab-ink: #5a524a;
@@ -64,35 +66,40 @@
 }
 
 :root[data-mode="eink"] {
-  --frame: #eaeaea;
-  --frame-line: #c8c8c8;
-  --title: #6a6a6a;
-  --page: #f4f4f4;
-  --tint: #eaeaea;
-  --tint-deep: #e0e0e0;
-  --ink: #2e2e2e;
-  --muted: #5e5e5e;
-  --rule: #c8c8c8;
-  --accent: #4a4a4a;
-  --link: #3a3a3a;
+  /* Dim greys, like an e-reader with the light turned down: nothing on the
+     page is brighter than #c8c8c8. */
+  --frame: #aaaaaa;
+  --frame-line: #8a8a8a;
+  --title: #4a4a4a;
+  --page: #c4c4c4;
+  --tint: #b8b8b8;
+  --tint-deep: #acacac;
+  --ink: #1c1c1c;
+  --muted: #383838;
+  --rule: #8e8e8e;
+  --accent: #2a2a2a;
+  --link: #1c1c1c;
   --link-hover: #000000;
-  --point: #6a6a6a;
-  --badge: #6a6a6a;
-  --tab-bg: #e3e3e3;
-  --tab-ink: #4a4a4a;
-  --tab-on-bg: #4a4a4a;
-  --tab-on-ink: #ffffff;
-  --green: #8a8a8a;
-  --sand: #c8c8c8;
-  --shadow: rgba(0, 0, 0, 0.15);
-  --kind-1: #2e2e2e;
-  --kind-2: #555555;
-  --kind-3: #777777;
-  --kind-4: #8a8a8a;
-  --spark-0: #ffffff;
-  --spark-1: #b0b0b0;
-  --spark-2: #8a8a8a;
+  --point: #3a3a3a;
+  --walnut: #333333;
+  --walnut-ink: #c8c8c8;
+  --badge: #3a3a3a;
+  --tab-bg: #b6b6b6;
+  --tab-ink: #2a2a2a;
+  --tab-on-bg: #3a3a3a;
+  --tab-on-ink: #dcdcdc;
+  --green: #5a5a5a;
+  --sand: #9a9a9a;
+  --shadow: rgba(0, 0, 0, 0.2);
+  --kind-1: #1c1c1c;
+  --kind-2: #404040;
+  --kind-3: #5c5c5c;
+  --kind-4: #747474;
+  --spark-0: #d0d0d0;
+  --spark-1: #9a9a9a;
+  --spark-2: #6a6a6a;
 }
+
 
 * {
   box-sizing: border-box;
@@ -253,8 +260,64 @@ b {
   display: grid;
   grid-template-rows: minmax(0, 1fr);
   place-items: center;
-  background: var(--frame) var(--bg) center top / cover no-repeat;
+  overflow: clip;
+  /* The bakery, built from pieces drawn at 2x and shown at 1:1, so it fills
+     any screen without stretching. Layers, front to back: the chalkboard and
+     the baguette crates beside the window, the counter, the wall with windows
+     and prints, the bread shelves, the tile. */
+  --card-half: 540px;
+  background-color: #fbf8f3;
+  background-image: url("./art/cafe/right.png"), url("./art/cafe/left.png"), url("./art/cafe/counter.png"), url("./art/cafe/wall.png"), url("./art/cafe/top.png"), url("./art/cafe/tile.png");
+  background-repeat: no-repeat, no-repeat, repeat-x, repeat-x, repeat-x, repeat;
+  background-position:
+    left calc(50% + var(--card-half) + 68px) bottom 128px,
+    left calc(50% - var(--card-half) - 68px) bottom 128px,
+    left 0 bottom 0,
+    left calc(50% + var(--card-half) + 304px) top 336px,
+    left 0 top 0,
+    left 0 top 0;
   image-rendering: pixelated;
+}
+
+:root[data-mode="eink"] .sky {
+  background-color: #ececec;
+  background-image: url("./art/cafe/right-evening.png"), url("./art/cafe/left-evening.png"), url("./art/cafe/counter-evening.png"), url("./art/cafe/wall-evening.png"), url("./art/cafe/top-evening.png"), url("./art/cafe/tile-evening.png");
+}
+
+/* E-ink: dim the bakery and the pixel art to match the page. */
+:root[data-mode="eink"] .sky::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.32);
+  pointer-events: none;
+}
+
+:root[data-mode="eink"] .px,
+:root[data-mode="eink"] .essay .plate img,
+:root[data-mode="eink"] .drawing img {
+  filter: brightness(0.8);
+}
+
+:root[data-mode="eink"] .titlebar,
+:root[data-mode="eink"] .mode-toggle {
+  color: #dcdcdc;
+}
+
+:root[data-mode="eink"] .bubble,
+:root[data-mode="eink"] .bubble::after {
+  background: #c8c8c8;
+}
+
+/* Without 128px beside the window, the two side pieces would hide behind it. */
+@media (max-width: 1335px) {
+  .sky {
+    background-image: none, none, url("./art/cafe/counter.png"), url("./art/cafe/wall.png"), url("./art/cafe/top.png"), url("./art/cafe/tile.png");
+  }
+
+  :root[data-mode="eink"] .sky {
+    background-image: none, none, url("./art/cafe/counter-evening.png"), url("./art/cafe/wall-evening.png"), url("./art/cafe/top-evening.png"), url("./art/cafe/tile-evening.png");
+  }
 }
 
 /* The window and the stickers that hang over its edges */
@@ -361,7 +424,7 @@ b {
 
 .book {
   display: grid;
-  grid-template-columns: 300px minmax(0, 1fr);
+  grid-template-columns: 240px minmax(0, 1fr);
   min-height: 0;
   border: 1px solid var(--frame-line);
   background: var(--page);
@@ -382,7 +445,10 @@ b {
 }
 
 .side {
-  padding: 0 18px 18px;
+  /* A column, so the links and footer sit at the bottom of the panel. */
+  display: flex;
+  flex-direction: column;
+  padding: 16px 14px;
   border-right: 1px solid var(--tint-deep);
   background: var(--page);
   box-shadow: inset -22px 0 22px -22px var(--shadow);
@@ -409,6 +475,7 @@ b {
   border-left: 0;
   color: var(--tab-ink);
   font: 500 14px/1.2 var(--display);
+  white-space: nowrap;
 }
 
 .tab:hover {
@@ -427,25 +494,8 @@ b {
 
 /* Left page */
 
-.counter {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  padding: 5px 6px;
-  margin: 0 -18px 14px;
-  background: var(--tint);
-  border-bottom: 1px dotted var(--rule);
-  font: 700 12px var(--head);
-  color: var(--accent);
-}
 
-.counter b {
-  color: var(--red);
-}
 
-.counter-sep {
-  color: var(--rule);
-}
 
 .photo {
   text-align: center;
@@ -453,26 +503,42 @@ b {
 
 .photo-mount {
   display: grid;
-  place-items: center;
+  justify-items: center;
+  align-items: end;
+  width: 150px;
   height: 150px;
-  margin: 0 auto 8px;
+  overflow: hidden;
+  margin: 0 auto;
   background: var(--tint);
   border: 1px solid var(--rule);
 }
 
+/* The minimi is 24 x 39; rows 0-27 reach her waistband. Shown at 4x. */
+.photo-crop {
+  display: block;
+  width: 96px;
+  height: 112px;
+  overflow: hidden;
+}
+
 .photo-minimi {
-  width: 72px;
-  height: 111px;
+  display: block;
+  width: 96px;
+  height: 156px;
 }
 
-.photo-name {
-  font: 600 18px var(--display);
-  color: var(--ink);
-}
-
-.photo-line {
-  font-size: 12px;
+.side-degree {
+  display: grid;
+  gap: 3px;
+  margin-top: 20px;
+  text-align: center;
+  font-size: 13px;
   line-height: 1.5;
+  text-wrap: balance;
+}
+
+.side-school {
+  font-size: 12px;
   color: var(--muted);
 }
 
@@ -486,38 +552,84 @@ b {
 }
 
 .side-facts {
-  margin: 14px 0 0;
-  padding: 10px 0 0;
+  display: grid;
+  gap: 16px;
+  margin: 22px 0 0;
+  padding: 20px 0 0;
   border-top: 1px dotted var(--rule);
   font-size: 13px;
 }
 
-.side-facts div {
-  display: grid;
-  grid-template-columns: 40px 1fr;
-  gap: 8px;
-  padding: 3px 0;
-}
-
-.side-facts dt {
-  font: 700 12px/1.7 var(--head);
-  color: var(--pink-deep);
-}
-
 .side-facts dd {
-  margin: 0;
-  line-height: 1.5;
+  margin: 6px 0 0;
+  line-height: 1.6;
+}
+
+/* Narrow column: slimmer link buttons so all three fit on one line. */
+.side-links .pxbtn {
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
+/* The status: a word or two from status.txt at the repo root. */
+.side-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding: 7px 10px;
+  background: var(--tint);
+  border-left: 3px solid var(--walnut);
+}
+
+.side-status-text {
+  flex: 1;
+  font: 500 15px var(--display);
+  color: var(--ink);
+}
+
+.side-status time {
+  font: 600 11px var(--head);
+  color: var(--muted);
+}
+
+.tag-status {
+  background: var(--walnut);
+  color: var(--walnut-ink);
+}
+
+/* Small solid labels: "now" filled in rose, "next" an outline. */
+.tag {
+  display: inline-block;
+  padding: 1px 7px 2px;
+  font: 500 12px/1.3 var(--display);
+}
+
+.tag-now {
+  background: var(--point);
+  color: #fff;
+}
+
+.tag-next {
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+
+:root[data-mode="eink"] .tag-now {
+  color: var(--walnut-ink);
 }
 
 .side-links {
   display: flex;
-  gap: 6px;
+  flex-wrap: wrap;
+  gap: 5px;
   justify-content: center;
-  margin-top: 16px;
+  margin-top: auto;
+  padding-top: 26px;
 }
 
 .side-foot {
-  margin-top: 18px;
+  margin-top: 22px;
   text-align: center;
   font-size: 11px;
   color: var(--muted);
@@ -675,10 +787,11 @@ a.panel-more::after {
   transform: rotate(45deg);
 }
 
+/* Two panels side by side when each gets at least 290px; otherwise stacked. */
 .home-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(min(290px, 100%), 1fr));
+  gap: 0 12px;
 }
 
 .notice,
@@ -731,31 +844,35 @@ a.panel-more::after {
   font: 700 11px/14px var(--head);
 }
 
-/* Profile */
+/* Journey: chapters in order, joined by a dotted line */
 
-.profile-facts {
-  margin: 0;
-  font-size: 13px;
+.journey {
+  list-style: none;
+  margin: 0 0 4px;
+  padding: 0 0 0 18px;
+  border-left: 1px dotted var(--rule);
+  margin-left: 4px;
 }
 
-.profile-facts div {
-  display: grid;
-  grid-template-columns: 76px 1fr;
-  gap: 10px;
-  padding: 5px 0;
+.chapter {
+  position: relative;
 }
 
-.profile-facts div + div {
-  border-top: 1px dotted var(--rule);
+.chapter-since {
+  position: relative;
+  margin: 0 0 4px;
+  font: 600 12px var(--head);
+  color: var(--muted);
 }
 
-.profile-facts dt {
-  font: 700 12px/1.7 var(--head);
-  color: var(--pink-deep);
-}
-
-.profile-facts dd {
-  margin: 0;
+.chapter-since::before {
+  content: "";
+  position: absolute;
+  left: -23px;
+  top: 5px;
+  width: 8px;
+  height: 8px;
+  background: var(--point);
 }
 
 .numeral {
@@ -793,9 +910,9 @@ a.panel-more::after {
   background: var(--lime);
 }
 
-/* Diary */
+/* Resume */
 
-.diary {
+.resume {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -803,7 +920,7 @@ a.panel-more::after {
 
 .entry {
   display: grid;
-  grid-template-columns: 140px 1fr;
+  grid-template-columns: 164px 1fr;
   gap: 14px;
   padding: 12px 0 14px;
   border-bottom: 1px dotted var(--rule);
@@ -848,7 +965,15 @@ a.panel-more::after {
   color: var(--muted);
 }
 
-/* Lists (board, awards) */
+.resume-head {
+  margin: 18px 0 2px;
+  padding-bottom: 6px;
+  border-bottom: 1px dotted var(--rule);
+  font: 500 17px var(--display);
+  color: var(--accent);
+}
+
+/* Lists (board, writing, awards) */
 
 .list {
   width: 100%;
@@ -985,6 +1110,322 @@ a.panel-more::after {
   border-left: 3px solid var(--pink-deep);
   font: 700 13px/1.6 var(--head);
   color: var(--accent);
+}
+
+/* Writing: an entry written in Markdown. Sections number themselves. */
+
+.essay-date {
+  margin-top: 2px;
+  font: 600 12px var(--head);
+  color: var(--muted);
+}
+
+.essay-summary {
+  margin-top: 2px;
+  font: 400 12px var(--text);
+  color: var(--muted);
+}
+
+.empty {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.essay {
+  padding: 14px 14px 4px;
+  max-width: 64ch;
+  font-size: 13px;
+  line-height: 1.7;
+  counter-reset: sec;
+}
+
+.essay > * + * {
+  margin-top: 10px;
+}
+
+.essay h2 {
+  margin-top: 20px;
+  font: 500 17px var(--display);
+  color: var(--accent);
+  counter-reset: sub;
+}
+
+.essay h3 {
+  margin-top: 14px;
+  font: 700 13px var(--head);
+  color: var(--ink);
+}
+
+.essay.numbered h2::before {
+  counter-increment: sec;
+  content: counter(sec) ". ";
+  color: var(--point);
+}
+
+.essay.numbered h3::before {
+  counter-increment: sub;
+  content: counter(sec) "." counter(sub) " ";
+  color: var(--point);
+}
+
+.essay ul,
+.essay ol {
+  padding-left: 22px;
+}
+
+.essay ul {
+  list-style: square;
+}
+
+.essay li + li {
+  margin-top: 3px;
+}
+
+.essay blockquote {
+  padding: 8px 12px;
+  background: var(--tint);
+  border-left: 3px solid var(--point);
+  color: var(--accent);
+}
+
+.essay code {
+  padding: 0 3px;
+  background: var(--tint);
+  border: 1px solid var(--rule);
+  font-size: 12px;
+}
+
+.essay pre {
+  padding: 8px 10px;
+  overflow-x: auto;
+  background: var(--tint);
+  border: 1px solid var(--rule);
+}
+
+.essay pre code {
+  padding: 0;
+  border: 0;
+}
+
+.essay table {
+  border-collapse: collapse;
+}
+
+.essay th,
+.essay td {
+  padding: 4px 10px;
+  border: 1px solid var(--rule);
+  text-align: left;
+}
+
+.essay th {
+  background: var(--tint);
+  font: 700 12px var(--head);
+}
+
+.essay .plate {
+  display: block;
+  max-width: 380px;
+  margin: 4px 0;
+  padding: 6px;
+  border: 1px solid var(--frame-line);
+  background: var(--page);
+  box-shadow: 2px 2px 0 var(--tint-deep);
+}
+
+.essay .plate img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.plate-cap {
+  display: block;
+  padding-top: 5px;
+  font: 600 12px var(--head);
+  color: var(--muted);
+  text-align: center;
+}
+
+/* Published: a photo's plate shows once the photo has loaded. */
+.essay:not([data-dev]) .plate:not(.ok) {
+  display: none;
+}
+
+/* Locally: a missing photo shows where it will go. */
+.essay[data-dev] .plate.missing img {
+  display: none;
+}
+
+.essay[data-dev] .plate.missing::before {
+  content: "Photograph to come";
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  background: repeating-linear-gradient(45deg, var(--tint) 0 8px, var(--page) 8px 16px);
+  color: var(--muted);
+  font: 600 12px var(--head);
+}
+
+/* Home: the Kingston street scene, at a whole-number scale where it fits */
+.scene {
+  display: block;
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+  aspect-ratio: 2 / 1;
+  margin: 0 auto;
+}
+
+/* My room */
+.room-text {
+  font-size: 13px;
+}
+
+.drawings {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.drawing {
+  margin: 0;
+  padding: 6px;
+  border: 1px solid var(--frame-line);
+  background: var(--page);
+  box-shadow: 2px 2px 0 var(--tint-deep);
+}
+
+.drawing img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.drawing figcaption {
+  padding-top: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.drawing figcaption b {
+  display: block;
+  color: var(--ink);
+}
+
+/* Board: starred posts as cards above the list */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px 10px;
+  background: var(--page);
+  border: 1px solid var(--frame-line);
+  border-top: 4px solid var(--walnut);
+  box-shadow: 3px 3px 0 var(--tint-deep);
+  text-align: left;
+  font: inherit;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.card:hover {
+  background: var(--tint);
+}
+
+.card:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 var(--tint-deep);
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-title {
+  font: 600 20px/1.2 var(--display);
+  color: var(--accent);
+}
+
+.card-sub {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px 10px;
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px dotted var(--rule);
+  font: 600 12px var(--head);
+  color: var(--muted);
+}
+
+.card-read {
+  align-self: flex-end;
+  font: 500 13px var(--display);
+  color: var(--point);
+}
+
+.card-read::after {
+  content: " »";
+}
+
+/* Board: starred posts are pinned at the top. */
+.star {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  background: var(--point);
+  clip-path: polygon(50% 0, 62% 35%, 100% 38%, 70% 60%, 80% 100%, 50% 76%, 20% 100%, 30% 60%, 0 38%, 38% 35%);
+  vertical-align: -1px;
+}
+
+.board-list tr.starred .post-link {
+  font-weight: 700;
+}
+
+.essay a {
+  text-decoration: underline;
+}
+
+.essay .footnote-ref a {
+  padding: 0 1px;
+  font: 700 10px var(--head);
+  color: var(--point);
+  text-decoration: none;
+}
+
+.essay .footnotes-sep {
+  margin-top: 22px;
+  border: 0;
+  border-top: 1px dotted var(--rule);
+}
+
+.essay .footnotes {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.essay .footnotes-list {
+  padding-left: 20px;
+}
+
+.essay .footnote-backref {
+  text-decoration: none;
 }
 
 .reflection {
@@ -1256,7 +1697,7 @@ a.panel-more::after {
 
 .guest-minimi {
   width: 48px;
-  height: 74px;
+  height: 78px;
   margin-bottom: 4px;
 }
 
@@ -1311,12 +1752,17 @@ a.panel-more::after {
     padding: 10px;
   }
 
+  /* On phones: the owner's column first, then the tabs, then the page. */
+  .book {
+    display: contents;
+  }
+
   .tabs {
-    order: -1;
+    order: 1;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 4px;
-    padding: 0 0 10px;
+    padding: 10px 0;
   }
 
   .tab {
@@ -1328,10 +1774,6 @@ a.panel-more::after {
     padding-left: 10px;
   }
 
-  .book {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   .side,
   .page {
     overflow: visible;
@@ -1339,34 +1781,52 @@ a.panel-more::after {
   }
 
   .page {
+    order: 2;
     padding: 14px 12px 18px;
+    border: 1px solid var(--frame-line);
   }
 
   .side {
-    order: 1;
+    order: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0 12px;
     align-items: start;
-    padding: 0 12px 14px;
-    border-right: 0;
-    border-top: 1px solid var(--frame-line);
+    padding: 12px 12px 14px;
+    border: 1px solid var(--frame-line);
     background: var(--page);
   }
 
-  .counter {
-    grid-column: 1 / -1;
-    margin: 0 -12px 12px;
-  }
 
   .side-intro,
-  .side-facts {
-    grid-column: 2;
-    margin-top: 0;
+  .photo,
+  .side-degree {
+    grid-column: 1;
+  }
+
+  .side-status {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .photo {
+    grid-row: 2;
+  }
+
+  .side-degree {
+    grid-row: 3;
   }
 
   .side-facts {
-    margin-top: 8px;
+    grid-row: 2 / span 2;
+  }
+
+  .side-facts {
+    grid-column: 2;
+    align-self: center;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
   }
 
   .side-links,
@@ -1417,7 +1877,10 @@ a.panel-more::after {
   .side-intro,
   .side-facts {
     grid-column: 1;
-    margin-top: 10px;
+    grid-row: auto;
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px dotted var(--rule);
   }
 
   .photo-mount {

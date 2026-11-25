@@ -6,73 +6,71 @@
 export const INTRO = {
   name: "Ahreum Lee",
   title: "Computer Science & Biotech new grad, McGill University",
-  now: "Software engineering intern at PATRY Group, Kingston",
+  now: "SWE intern, PATRY Group",
+  next: "Full-time from Jan 2027",
+  // Not shown for now (taken off the left column on request); kept to bring back.
   summary:
     "I studied computer science and AI at McGill, with a minor in biotechnology. During undergrad I worked on AI tools, research projects and student communities. This page is where I keep them."
 };
 
-export const SKILLS = [
+// Journey: the four things I picked up, in the order they started. Each has
+// what it taught me and what I did. The graph sits under them.
+export const JOURNEY = [
   {
-    id: "ai",
-    numeral: "I",
-    sheet: "crane",
-    heading: "Working with AI",
-    trait:
-      "I worked on AI tools at PATRY Group and on an AI nurse for seniors during undergrad. Both taught me that AI is quick at a first version and needs checking on the details, including the model doing the checking.",
+    id: "people",
+    since: "2024",
+    heading: "Coordinating people",
+    lesson:
+      "Before I wrote software for anyone, I spent eight months on the BIM side of a battery plant build, keeping engineering firms in step from the project office. Back at McGill I kept doing that for student groups and a hackathon team.",
     points: [
-      "Built AI-powered internal tools at PATRY Group, now used by accounts receivable, property management and paralegal staff.",
-      "Building a tenant maintenance bot on Claude Haiku that sorts requests, and checking it with an LLM judge against Claude Opus plus manual review of samples.",
-      "Evaluated an AI nurse for seniors with an LLM-as-a-judge suite, and caught the judge making mistakes of its own.",
-      "Claude Certified Developer – Foundations (Anthropic, 2026), covering tool use and MCP. I prototype with Claude, Codex and Gumloop."
-    ],
-    link: { label: "More on ADiNA", href: "#case-adina" }
-  },
-  {
-    id: "data",
-    numeral: "II",
-    sheet: "earth",
-    heading: "Data analysis & research",
-    trait:
-      "I worked in three research labs during undergrad. They taught me to check a result against what actually happened, and to go and meet the people a system is for.",
-    points: [
-      "Collected 2,100+ news articles on Canadian healthcare reform, modelled their topics with BERTopic, and checked the trends against real events.",
-      "Built geospatial data pipelines for seismic risk research, and set up the move to a government HPC cluster.",
-      "Visited a care home three times to meet the residents and caregivers an AI system was for."
-    ],
-    link: { label: "More on OpenQuake", href: "#case-openquake" }
+      "Project Coordinator, Techwin Plant Canada: worked with senior project managers to keep 5+ engineering firms aligned on a $1B battery plant.",
+      "Co-President, AKCSE: led a multidisciplinary executive team and secured $2,000 in extra funding.",
+      "VP Marketing, GDG on Campus McGill: 100K+ impressions in two months.",
+      "Product manager for a team of four at McHacks 2026."
+    ]
   },
   {
     id: "software",
-    numeral: "III",
-    sheet: "house",
+    since: "2025",
     heading: "Building software",
-    trait:
-      "I built web tools for a property company, a retrofit research group and a seismic research team, each from what the people using it asked for.",
+    lesson:
+      "I built web tools for a retrofit research group, a seismic research team and a property company, each from what the people using it asked for.",
     points: [
-      "A Property Inbox at PATRY that brings maintenance requests from email, voicemail, the call exchange and Yardi into one place, and a tracker for Landlord and Tenant Board cases. React on Vercel, PostgreSQL and auth on Azure.",
       "A retrofit assessment tool at Reconstruct McGill, taken as far as testing with industry stakeholders on real data, then handed to the next cohort (React, Django REST, AWS).",
-      "Extensions to OpenQuake, an open-source seismic risk engine, in Python."
-    ],
-    link: { label: "See everything on the graph", href: "#range" }
+      "Extensions to OpenQuake, an open-source seismic risk engine, in Python.",
+      "A Property Inbox at PATRY that brings maintenance requests from email, voicemail, the call exchange and Yardi into one place, and a tracker for Landlord and Tenant Board cases. React on Vercel, PostgreSQL and auth on Azure."
+    ]
   },
   {
-    id: "leadership",
-    numeral: "IV",
-    sheet: "dolls",
-    heading: "Leadership",
-    trait: "I ran marketing and co-led student groups at McGill, and coordinated engineering firms on a construction site before that.",
+    id: "research",
+    since: "2025",
+    heading: "Research",
+    lesson:
+      "I worked in three research labs during undergrad. They taught me to check a result against what actually happened, and to go and meet the people a system is for.",
     points: [
-      "VP Marketing, GDG on Campus McGill: 100K+ impressions in two months.",
-      "Co-President, AKCSE: led a multidisciplinary executive team and secured $2,000 in extra funding.",
-      "Project Coordinator, Techwin Plant Canada: worked with senior project managers to keep 5+ engineering firms aligned on a $1B battery plant.",
-      "Product manager for a team of four at McHacks 2026.",
-      "Won the ACM CHI 2025 volunteer T-shirt competition, which got me to the conference in Yokohama."
+      "Visited a care home three times to meet the residents and caregivers an AI system was for.",
+      "Collected 2,100+ news articles on Canadian healthcare reform, modelled their topics with BERTopic, and checked the trends against real events.",
+      "Built geospatial data pipelines for seismic risk research, and set up the move to a government HPC cluster."
     ],
-    link: { label: "See everything on the graph", href: "#range" }
+    link: { label: "More on OpenQuake", href: "#post-openquake" }
+  },
+  {
+    id: "ai",
+    since: "2025",
+    heading: "Working with AI",
+    lesson:
+      "I worked on an AI nurse for seniors during undergrad and on AI tools at PATRY Group. Both taught me that AI is quick at a first version and needs checking on the details, including the model doing the checking.",
+    points: [
+      "Evaluated an AI nurse for seniors with an LLM-as-a-judge suite, and caught the judge making mistakes of its own.",
+      "Built AI-powered internal tools at PATRY Group, now used by accounts receivable, property management and paralegal staff.",
+      "Building a tenant maintenance bot on Claude Haiku that sorts requests, and checking it with an LLM judge against Claude Opus plus manual review of samples.",
+      "Claude Certified Developer – Foundations (Anthropic, 2026), covering tool use and MCP. I prototype with Claude, Codex and Gumloop."
+    ],
+    link: { label: "More on ADiNA", href: "#post-adina" }
   }
 ];
 
-// Positions, newest first: how recruiters read a profile.
+// Resume: positions, newest first.
 export const EXPERIENCE = [
   {
     role: "Software Engineering Intern",
@@ -89,7 +87,7 @@ export const EXPERIENCE = [
     when: "May – Sep 2026",
     body:
       "I extended the open-source OpenQuake seismic risk engine in Python and set up our move to a government HPC cluster, where runs take about 30 hours instead of 96.",
-    link: { label: "More on OpenQuake", href: "#case-openquake" }
+    link: { label: "More on OpenQuake", href: "#post-openquake" }
   },
   {
     role: "Research Fellow (part-time)",
@@ -106,7 +104,7 @@ export const EXPERIENCE = [
     when: "Aug 2025 – Jan 2026",
     body:
       "I built an LLM-as-a-judge evaluation for ADiNA, an AI nurse for seniors, and visited a care home three times to meet the residents and caregivers it was for.",
-    link: { label: "More on ADiNA", href: "#case-adina" }
+    link: { label: "More on ADiNA", href: "#post-adina" }
   },
   {
     role: "Web Developer (NSERC USRA)",
@@ -122,84 +120,52 @@ export const EXPERIENCE = [
     place: "Montreal, QC",
     when: "Jan – Aug 2024",
     body:
-      "Eight months on site with senior project managers, coordinating 5+ engineering firms on a $1B battery plant: BIM model reviews in Autodesk Construction Cloud, piping design, value engineering and certification. The team reused my coordination notes."
+      "Eight months in the project office with senior project managers, coordinating 5+ engineering firms on a $1B battery plant through BIM: model reviews in Autodesk Construction Cloud, piping design, value engineering and certification. The team reused my coordination notes."
   }
 ];
 
-// The two projects opened up in full, in the middle of the page.
-export const CASES = [
+// Resume: what I did outside work and class.
+export const EXTRACURRICULARS = [
   {
-    id: "adina",
-    numeral: "I",
-    name: "ADiNA",
-    subtitle: "An AI digital nurse for seniors with mild cognitive impairment",
-    meta: [
-      ["Role", "Research Assistant"],
-      ["Where", "Shared Reality Lab, McGill"],
-      ["When", "Aug 2025 – Jan 2026"],
-      ["Tools", "OpenAI Realtime API, RAG on Weaviate, DeepEval, GPT-4o-mini"]
-    ],
-    sections: [
-      {
-        heading: "The question",
-        body:
-          "ADiNA is a voice agent meant to talk with seniors in long-term care. Before it reached anyone, we needed a way to tell whether one version spoke to them better than another."
-      },
-      {
-        heading: "What I built",
-        body:
-          "A synthetic resident that behaves the way memory loss can: word-finding pauses, repeated questions, sudden shifts in mood. Around it, an LLM-as-a-judge evaluation with five custom metrics (validation, engagement, retrieval relevance, trigger avoidance and memory consistency), run across five care scenarios, four agent versions and 65 interactions."
-      },
-      {
-        heading: "What I found",
-        body:
-          "The most factual version was the least engaging when a resident was distressed, yet the best in a medical emergency. A single line telling the agent who its users were did as well as a full Validation Therapy prompt. The judge needed checking too: it penalised the agent for avoiding a topic that never came up."
-      },
-      {
-        heading: "What changed it",
-        body:
-          "Three visits to a care home, to meet caregivers and residents. Residents were uneasy when an assistant knew things they didn't remember telling it, so I proposed keeping conversation and clinical records in separate memories."
-      }
-    ],
-    reflection: {
-      lead: "Pills, not vitamins.",
-      credit: "A line I took from Ivan Zhao.",
-      body:
-        "Most of the development effort went into adding features, cutting latency and supporting more languages. What helped me was narrowing to the one thing the agent had to do well, the conversation itself, and scoping from there what would help."
-    },
-    plates: [
-      { src: "/images/adina/overview.jpg", caption: "System overview" },
-      { src: "/images/adina/detail.jpg", caption: "Evaluation detail" }
-    ]
+    role: "VP Marketing",
+    org: "GDG on Campus McGill",
+    when: "2025 – present",
+    body: "I run campaigns for McGill's student developer community: 100K+ impressions in two months."
   },
   {
-    id: "openquake",
-    numeral: "II",
-    size: "spotlight",
-    name: "OpenQuake",
-    subtitle: "Seismic risk calculations at scale",
-    meta: [
-      ["Role", "Research Intern (SURE)"],
-      ["Where", "McGill University"],
-      ["When", "May – Sep 2026"],
-      ["Tools", "Python, OpenQuake engine, SLURM, geospatial data"]
-    ],
-    sections: [
-      {
-        heading: "The work",
-        body:
-          "I extended the open-source OpenQuake engine in Python for classical seismic risk calculations and built reproducible pipelines for building, population and Vs30 data. I also set up the move from engineering-department computers to a government HPC cluster (SLURM), where a representative calculation runs in about 30 hours instead of 96. The poster won the Best SURE Poster Award (General Category)."
-      }
-    ],
-    reflection: {
-      lead: "Inside a researcher's head.",
-      body:
-        "In earlier labs I assisted with work I already knew. Here I worked closely with my supervisors, analysing the outputs together and brainstorming solutions. It was a chance to see how a researcher thinks through a problem."
-    },
-    links: [{ label: "Code on GitHub", href: "https://github.com/alee020304/oq-engine" }],
-    plates: [{ src: "/images/openquake/poster.jpg", caption: "The SURE poster" }]
+    role: "Product Manager",
+    org: "McHacks 2026",
+    when: "2026",
+    body: "For a team of four, I defined the users, cut the scope to fit 24 hours and pitched hands-free navigation that gives directions by landmarks."
+  },
+  {
+    role: "Student Volunteer",
+    org: "ACM CHI 2025, Yokohama",
+    when: "2025",
+    body: "I won the student volunteer T-shirt design competition, which got me to the conference."
+  },
+  {
+    role: "Co-President",
+    org: "AKCSE",
+    when: "2024 – 2025",
+    body: "I co-led a multidisciplinary executive team and secured $2,000 in additional funding."
   }
 ];
+
+// My room: what I do outside work. Space-diary drawings are image files in
+// ../space-diary (see the README there).
+export const ROOM = {
+  running: "I like running outdoors.",
+  baking: "I've made macarons and a croquembouche, and I'm growing my own sourdough starter.",
+  spaceDiary:
+    "I keep a space diary: drawings of spaces, each with the realization it gave me."
+};
+
+export const EDUCATION = {
+  degree: "B.Sc. Computer Science & Artificial Intelligence, Minor in Biotechnology",
+  school: "McGill University",
+  when: "May 2026"
+};
 
 // The range graph. x = how technical (0–10), y = how creative (0–10).
 // The positions are judgement calls: move them freely.
@@ -344,7 +310,7 @@ export const RANGE = [
     y: 2.1,
     meta: "Project Coordinator, Techwin Plant Canada · Jan – Aug 2024",
     body:
-      "Eight months on site with senior project managers, coordinating 5+ engineering firms on a $1B battery plant. I tracked 3D model clashes in Autodesk Construction Cloud, and the team reused my coordination notes."
+      "Eight months in the project office with senior project managers, coordinating 5+ engineering firms on a $1B battery plant through BIM. I tracked 3D model clashes in Autodesk Construction Cloud, and the team reused my coordination notes."
   },
   {
     id: "akcse",

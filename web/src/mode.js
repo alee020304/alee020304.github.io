@@ -18,7 +18,7 @@ export function useModeState() {
   });
   useEffect(() => {
     document.documentElement.dataset.mode = mode;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", mode === "eink" ? "#6a6a6a" : "#786f68");
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", mode === "eink" ? "#4a4a4a" : "#786f68");
     try {
       localStorage.setItem("hompy-mode", mode);
     } catch {

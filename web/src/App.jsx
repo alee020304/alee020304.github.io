@@ -8,43 +8,46 @@ import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { INTRO } from "./data/work.js";
 import Sidebar from "./components/Sidebar.jsx";
 import Home from "./components/Home.jsx";
-import Profile from "./components/Profile.jsx";
-import Diary from "./components/Diary.jsx";
+import Journey from "./components/Journey.jsx";
+import Resume from "./components/Resume.jsx";
 import Board from "./components/Board.jsx";
-import Range from "./components/Range.jsx";
 import Awards from "./components/Awards.jsx";
-import Guestbook from "./components/Guestbook.jsx";
+import MyRoom from "./components/MyRoom.jsx";
 import { useSparkleTrail } from "./components/Sparkles.jsx";
 import { ModeContext, useModeState } from "./mode.js";
 import { ART } from "./art.js";
 
-// The background is 640 x 400 pixel art. Scale it by the smallest whole
-// number that covers the screen, so every pixel stays square.
 export const TABS = [
   { id: "home", label: "Home", page: Home },
-  { id: "profile", label: "Profile", page: Profile },
-  { id: "diary", label: "Diary", page: Diary },
+  { id: "journey", label: "Journey", page: Journey },
+  { id: "resume", label: "Resume", page: Resume },
   { id: "board", label: "Board", page: Board },
-  { id: "graph", label: "Graph", page: Range },
   { id: "awards", label: "Awards", page: Awards },
-  { id: "guestbook", label: "Guestbook", page: Guestbook }
+  { id: "room", label: "My room", page: MyRoom }
 ];
 
 // Where an old or friendly anchor goes.
 const ALIAS = {
   top: "home",
   forms: "home",
-  experience: "diary",
+  profile: "journey",
+  graph: "journey",
+  diary: "resume",
+  experience: "resume",
   cases: "board",
   projects: "board",
-  range: "graph",
+  range: "journey",
+  writing: "board",
   recognition: "awards",
-  contact: "guestbook"
+  guestbook: "room",
+  contact: "home"
 };
 
 export function route(hash) {
   const raw = (hash || "").replace(/^#/, "");
-  if (raw.startsWith("case-")) return { tab: "board", post: raw.slice(5) };
+  // A post: #post-<file>, or the older #case-<file> and #writing-<file>.
+  const post = raw.match(/^(?:post|case|writing)-(.+)$/);
+  if (post) return { tab: "board", post: post[1] };
   const tab = ALIAS[raw] || raw;
   return { tab: TABS.some((t) => t.id === tab) ? tab : "home", post: null };
 }
@@ -75,7 +78,7 @@ export default function App() {
   return (
     <ModeContext.Provider value={mode}>
     <MotionConfig reducedMotion="user">
-      <div className="sky" style={{ "--bg": `url(${art.bg})` }}>
+      <div className="sky">
         <div className="window-wrap">
         <div className="window" id="hompy">
           <div className="titlebar">

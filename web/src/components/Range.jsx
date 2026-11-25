@@ -1,5 +1,5 @@
-// Graph: everything tried, pinned to graph paper. x is how technical, y how
-// creative. Hover, focus or tap a pin for what I did.
+// The graph at the bottom of Journey: everything I've done, pinned by how
+// technical (x) and how creative (y) it was. Hover, focus or tap a pin.
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
@@ -24,7 +24,7 @@ function Card({ item }) {
       <h3>{item.label}</h3>
       <p className="card-meta">{item.meta}</p>
       <p className="card-body">{item.body}</p>
-      {item.caseId && <a href={`#case-${item.caseId}`}>Read the post</a>}
+      {item.caseId && <a href={`#post-${item.caseId}`}>Read the post</a>}
       {item.href && (
         <a href={item.href} target="_blank" rel="noreferrer">
           View on GitHub
@@ -85,18 +85,13 @@ export default function Range() {
 
   return (
     <>
-      <header className="page-title">
-        <h1>Graph</h1>
-        <p className="page-url">fifteen roles and projects, by how technical and how creative</p>
-      </header>
-
-      <section className="panel">
+      <section className="panel graph-panel" id="graph">
         <div className="panel-head">
-          <h2>Where the work sits</h2>
+          <h2>Where my work sits</h2>
           <span className="panel-more">hover or tap a pin</span>
         </div>
         <p className="graph-why">
-          For me, creativity is exploration. Sometimes it is a break from technical work, and sometimes it turns up an
+          Fifteen roles and projects, by how technical and how creative each one was. For me, creativity is exploration. Sometimes it is a break from technical work, and sometimes it turns up an
           answer the technical work had not found.
         </p>
 

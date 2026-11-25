@@ -1,77 +1,65 @@
-// The front page: the miniroom, a notice, and what's new.
+// The front page: where I am, and what's new.
 
-import { CASES, EXPERIENCE, INTRO } from "../data/work.js";
-import Miniroom from "./Miniroom.jsx";
+import { EXPERIENCE } from "../data/work.js";
+import { LATEST } from "../posts.js";
+import { ART } from "../art.js";
+import { useMode } from "../mode.js";
 
 const latest = EXPERIENCE[0];
 
 export default function Home() {
+  const mode = useMode();
   return (
     <>
       <header className="page-title">
         <h1>
-          Welcome to my room <span className="deco">♡</span>
+          Hi, come in <span className="deco">♡</span>
         </h1>
         <p className="page-url">https://alee020304.github.io</p>
       </header>
 
-      <section className="panel miniroom">
+      <section className="panel">
         <div className="panel-head">
-          <h2>Miniroom</h2>
-          <span className="panel-more">a room for late work</span>
+          <h2>Currently in: Kingston, Ontario</h2>
         </div>
-        <div className="miniroom-stage">
-          <div className="miniroom-fit">
-            <Miniroom />
-            <p className="bubble">hi, come in!</p>
-          </div>
-        </div>
+        <img
+          className="scene px"
+          src={ART[mode].kingston}
+          width="320"
+          height="160"
+          alt="Pixel drawing of me and my dog on Ontario Street in Kingston, by City Hall's clock tower, with patio umbrellas and a red trolley."
+        />
       </section>
 
-      <div className="home-grid">
-        <section className="panel">
-          <div className="panel-head">
-            <h2>Notice</h2>
-          </div>
-          <ul className="notice">
-            <li>
-              <b>Now.</b> {INTRO.now}.
-            </li>
-            <li>
-              <b>Next.</b> Open to full-time roles from January 2027.
-            </li>
-          </ul>
-        </section>
-
-        <section className="panel">
-          <div className="panel-head">
-            <h2>New posts</h2>
-            <a className="panel-more" href="#board">
-              more
-            </a>
-          </div>
-          <ul className="newposts">
-            {CASES.map((c) => (
-              <li key={c.id}>
-                <a href={`#case-${c.id}`}>
-                  {c.name}: {c.subtitle}
-                </a>
-                <span className="new" aria-label="new">
-                  N
-                </span>
-              </li>
-            ))}
-            <li>
-              <a href="#diary">
-                {latest.role}, {latest.org}
+      <section className="panel">
+        <div className="panel-head">
+          <h2>New posts</h2>
+          <a className="panel-more" href="#board">
+            more
+          </a>
+        </div>
+        <ul className="newposts">
+          {LATEST.slice(0, 2).map((p) => (
+            <li key={p.slug}>
+              <a href={`#post-${p.slug}`}>
+                {p.title}
+                {p.subtitle && `: ${p.subtitle}`}
               </a>
               <span className="new" aria-label="new">
                 N
               </span>
             </li>
-          </ul>
-        </section>
-      </div>
+          ))}
+          <li>
+            <a href="#resume">
+              {latest.role}, {latest.org}
+            </a>
+            <span className="new" aria-label="new">
+              N
+            </span>
+          </li>
+        </ul>
+      </section>
     </>
   );
 }

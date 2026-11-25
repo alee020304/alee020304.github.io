@@ -1,144 +1,175 @@
-// Board: the two projects as posts. The list is a table, as boards were;
-// a post opens under it. #case-<id> opens that post.
+// Board: starred posts (the two case studies) as cards at the top, then every
+// other post in a table, the way boards were. A post opens on its own; #post-<file>
+// opens one. Posts are Markdown files in ../posts.
 
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { CASES } from "../data/work.js";
+import { useEffect, useRef, useState } from "react";
+import { POSTS } from "../posts.js";
 
-// Locally, a missing photo shows a "Photograph to come" plate. In the
-// published build, a plate stays hidden until its photo has loaded.
-const SHOW_PLACEHOLDERS = import.meta.env.DEV;
+// Locally a missing photo shows a "Photograph to come" plate; in the
+// published build a plate stays hidden until its photo has loaded.
+const DEV = import.meta.env.DEV;
 
-function Plate({ plate }) {
-  const [status, setStatus] = useState("loading");
-  const hidden = !SHOW_PLACEHOLDERS && status !== "ok";
+const fmt = (d) => {
+  const t = new Date(d + "T00:00:00");
+  return isNaN(t) ? d : t.toLocaleDateString("en-CA", { year: "numeric", month: "short", day: "numeric" });
+};
+const when = (p) => p.when || fmt(p.date);
+
+const META = [
+  ["Role", "role"],
+  ["Where", "where"],
+  ["When", "when"],
+  ["Tools", "tools"]
+];
+
+function Post({ p, onBack }) {
+  const body = useRef(null);
+
+  // Mark each photo as loaded or missing, so CSS can show or hide its plate.
+  useEffect(() => {
+    body.current?.querySelectorAll(".plate img").forEach((img) => {
+      const plate = img.parentElement;
+      const ok = () => plate.classList.add("ok");
+      const missing = () => plate.classList.add("missing");
+      if (img.complete) (img.naturalWidth ? ok : missing)();
+      else {
+        img.addEventListener("load", ok, { once: true });
+        img.addEventListener("error", missing, { once: true });
+      }
+    });
+  }, [p]);
+
+  // Footnote links jump within the post instead of changing the address.
+  function onClick(ev) {
+    const a = ev.target.closest("a[href^='#fn']");
+    if (!a) return;
+    ev.preventDefault();
+    document.getElementById(a.getAttribute("href").slice(1))?.scrollIntoView({ block: "center" });
+  }
+
+  const meta = META.filter(([, k]) => p[k]);
   return (
-    <figure className="plate" hidden={hidden}>
-      {status === "missing" ? (
-        <div className="plate-empty">Photograph to come</div>
-      ) : (
-        <img src={plate.src} alt={plate.caption} onLoad={() => setStatus("ok")} onError={() => setStatus("missing")} />
-      )}
-      <figcaption>{plate.caption}</figcaption>
-    </figure>
-  );
-}
-
-const metaOf = (c, k) => c.meta.find(([key]) => key === k)?.[1];
-
-function Post({ c, onClose }) {
-  return (
-    <motion.article
-      className="post"
-      initial={{ opacity: 0, y: 6 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
-    >
+    <article className="post">
       <header className="post-head">
         <h2>
-          {c.name} <small>{c.subtitle}</small>
+          {p.title} {p.subtitle && <small>{p.subtitle}</small>}
         </h2>
-        <dl className="post-meta">
-          {c.meta.map(([k, v]) => (
-            <div key={k}>
-              <dt>{k}</dt>
-              <dd>{v}</dd>
-            </div>
-          ))}
-          {c.links?.map((l) => (
-            <div key={l.href}>
-              <dt>Link</dt>
-              <dd>
-                <a href={l.href} target="_blank" rel="noreferrer">
-                  {l.label}
-                </a>
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </header>
-
-      <div className="post-body">
-        {c.sections.map((s) => (
-          <section key={s.heading}>
-            <h3>{s.heading}</h3>
-            <p>{s.body}</p>
-          </section>
-        ))}
-        {c.quote && <blockquote>{c.quote}</blockquote>}
-        {c.reflection && (
-          <aside className="reflection">
-            <h3>What it taught me</h3>
-            <p>
-              <b>{c.reflection.lead}</b>
-              {c.reflection.credit && <span className="credit"> {c.reflection.credit}</span>}
-            </p>
-            <p>{c.reflection.body}</p>
-          </aside>
+        {meta.length || p.link ? (
+          <dl className="post-meta">
+            {meta.map(([label, k]) => (
+              <div key={k}>
+                <dt>{label}</dt>
+                <dd>{p[k]}</dd>
+              </div>
+            ))}
+            {p.link && (
+              <div>
+                <dt>Link</dt>
+                <dd>
+                  <a href={p.link} target="_blank" rel="noreferrer">
+                    {p.linkLabel || p.link}
+                  </a>
+                </dd>
+              </div>
+            )}
+          </dl>
+        ) : (
+          <p className="essay-date">
+            {fmt(p.date)}
+            {p.draft && " (draft, only shown locally)"}
+          </p>
         )}
-        <div className="plates">
-          {c.plates.map((p) => (
-            <Plate key={p.src} plate={p} />
-          ))}
-        </div>
-      </div>
-
+      </header>
+      <div
+        ref={body}
+        className={"essay" + (p.numbered ? " numbered" : "")}
+        data-dev={DEV || undefined}
+        onClick={onClick}
+        dangerouslySetInnerHTML={{ __html: p.html }}
+      />
       <footer className="post-foot">
-        <button className="pxbtn" onClick={onClose}>
+        <button className="pxbtn" onClick={onBack}>
           Back to list
         </button>
       </footer>
-    </motion.article>
+    </article>
   );
 }
 
 export default function Board({ post }) {
-  const [openId, setOpenId] = useState(post);
-  useEffect(() => setOpenId(post), [post]);
-  const open = CASES.find((c) => c.id === openId);
+  const [openSlug, setOpenSlug] = useState(post);
+  useEffect(() => setOpenSlug(post), [post]);
+  const open = POSTS.find((p) => p.slug === openSlug);
+  const starred = POSTS.filter((p) => p.starred);
+  const rest = POSTS.filter((p) => !p.starred);
 
-  function toggle(id) {
-    const next = openId === id ? null : id;
-    setOpenId(next);
-    history.replaceState(null, "", next ? `#case-${next}` : "#board");
+  function go(slug) {
+    setOpenSlug(slug);
+    history.replaceState(null, "", slug ? `#post-${slug}` : "#board");
+    document.getElementById("page")?.scrollTo(0, 0);
   }
 
   return (
     <>
       <header className="page-title">
         <h1>Board</h1>
-        <p className="page-url">two projects worth a closer look</p>
+        <p className="page-url">projects and writing</p>
       </header>
 
-      <section className="panel">
-        <table className="list board-list">
-          <thead>
-            <tr>
-              <th className="num">No.</th>
-              <th>Title</th>
-              <th className="when">When</th>
-            </tr>
-          </thead>
-          <tbody>
-            {CASES.map((c, i) => (
-              <tr key={c.id} className={c.id === openId ? "open" : ""} id={`case-${c.id}`}>
-                <td className="num">{CASES.length - i}</td>
-                <td>
-                  <button className="post-link" aria-expanded={c.id === openId} onClick={() => toggle(c.id)}>
-                    [{metaOf(c, "Role")}] {c.name}: {c.subtitle}
-                  </button>
-                </td>
-                <td className="when">{metaOf(c, "When")}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+      {open ? (
+        <Post p={open} onBack={() => go(null)} />
+      ) : (
+        <>
+          {starred.length > 0 && (
+            <div className="cards">
+              {starred.map((p) => (
+                <button key={p.slug} className="card" onClick={() => go(p.slug)}>
+                  <span className="card-top">
+                    <span className="star" role="img" aria-label="starred" />
+                    <span className="card-title">{p.title}</span>
+                  </span>
+                  {p.subtitle && <span className="card-sub">{p.subtitle}</span>}
+                  <span className="card-meta">
+                    {p.role && <span>{p.role}</span>}
+                    <span>{when(p)}</span>
+                  </span>
+                  <span className="card-read">Read</span>
+                </button>
+              ))}
+            </div>
+          )}
 
-      <AnimatePresence mode="wait" initial={false}>
-        {open && <Post key={open.id} c={open} onClose={() => toggle(open.id)} />}
-      </AnimatePresence>
+          {rest.length > 0 && (
+            <section className="panel">
+              <table className="list board-list">
+                <thead>
+                  <tr>
+                    <th className="num">No.</th>
+                    <th>Title</th>
+                    <th className="when">When</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rest.map((p, i) => (
+                    <tr key={p.slug}>
+                      <td className="num">{rest.length - i}</td>
+                      <td>
+                        <button className="post-link" onClick={() => go(p.slug)}>
+                          {p.title}
+                          {p.subtitle && `: ${p.subtitle}`}
+                          {p.draft && " (draft)"}
+                        </button>
+                        {p.summary && <p className="essay-summary">{p.summary}</p>}
+                      </td>
+                      <td className="when">{when(p)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </section>
+          )}
+        </>
+      )}
     </>
   );
 }

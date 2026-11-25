@@ -1,62 +1,66 @@
-// The left page: visit counter, me, one line, and how to reach me. The
-// counter counts this visitor's own visits, kept in their browser.
+// The left page: me, my status, what I'm doing now and next, and how to
+// reach me.
 
 import { useEffect, useState } from "react";
 import { CONTACT, INTRO } from "../data/work.js";
 import { Minimi } from "./Miniroom.jsx";
 
-function useVisits() {
-  const [n, setN] = useState({ today: 1, total: 1 });
+// The status (a word or two) is read from /status.txt at the repo root, so it
+// can be changed on GitHub without rebuilding the site. A line like
+// 2026-11-24 is the date it was written.
+function useStatus() {
+  const [status, setStatus] = useState(null);
   useEffect(() => {
-    try {
-      const day = new Date().toISOString().slice(0, 10);
-      const total = +(localStorage.getItem("hompy-total") || 0) + 1;
-      const today = (localStorage.getItem("hompy-day") === day ? +(localStorage.getItem("hompy-today") || 0) : 0) + 1;
-      localStorage.setItem("hompy-total", total);
-      localStorage.setItem("hompy-day", day);
-      localStorage.setItem("hompy-today", today);
-      setN({ today, total });
-    } catch {
-      /* private window: show 1 and 1 */
-    }
+    fetch("/status.txt", { cache: "no-cache" })
+      .then((r) => (r.ok ? r.text() : ""))
+      .then((raw) => {
+        const lines = raw.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+        const date = lines.find((l) => /^\d{4}-\d{2}-\d{2}$/.test(l));
+        const text = lines.filter((l) => l !== date).join(" ");
+        if (text) setStatus({ text, date });
+      })
+      .catch(() => {});
   }, []);
-  return n;
+  return status;
 }
 
+const fmt = (d) => new Date(d + "T00:00:00").toLocaleDateString("en-CA", { month: "short", day: "numeric" });
+
 export default function Sidebar() {
-  const { today, total } = useVisits();
+  const status = useStatus();
+  const [degree, school] = INTRO.title.split(", ");
   return (
     <aside className="side">
-      <p className="counter">
-        <span>
-          today <b>{today}</b>
-        </span>
-        <span className="counter-sep" aria-hidden="true">
-          |
-        </span>
-        <span>
-          total <b>{total.toLocaleString()}</b>
-        </span>
-      </p>
+      {status && (
+        <p className="side-status">
+          <span className="tag tag-status">status</span>
+          <span className="side-status-text">{status.text}</span>
+          {status.date && <time dateTime={status.date}>{fmt(status.date)}</time>}
+        </p>
+      )}
 
       <div className="photo">
+        {/* A portrait: the minimi from the waist up, standing on the frame's edge. */}
         <div className="photo-mount">
-          <Minimi className="photo-minimi" />
+          <span className="photo-crop">
+            <Minimi className="photo-minimi" />
+          </span>
         </div>
-        <p className="photo-name">{INTRO.name}</p>
-        <p className="photo-line">{INTRO.title}</p>
       </div>
 
-      <p className="side-intro">{INTRO.summary}</p>
+      <p className="side-degree">
+        <span>{degree}</span>
+        <span className="side-school">{school}</span>
+      </p>
 
       <dl className="side-facts">
         <div>
-          <dt>now</dt>
+          <dt className="tag tag-now">now</dt>
           <dd>{INTRO.now}</dd>
         </div>
         <div>
-          <dt>next</dt>
-          <dd>Open to full-time roles from January 2027</dd>
+          <dt className="tag tag-next">next</dt>
+          <dd>{INTRO.next}</dd>
         </div>
       </dl>
 
